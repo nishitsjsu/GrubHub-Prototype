@@ -3,9 +3,12 @@ import "./op.css";
 import axios from "axios";
 import cookie from "react-cookies";
 import { Redirect } from "react-router";
+import { connect } from "react-redux";
+import dataFetch_function from "../Action/BuyerProfileAction"
+import dataUpdate_function from "../Action/BuyerProfileUpdateAction";
 
 //Define a Login Component
-class Login extends Component {
+class BuyerProfile extends Component {
   //call the constructor method
   constructor(props) {
     //Call the constrictor of Super class i.e The Component
@@ -25,6 +28,18 @@ class Login extends Component {
     this.phoneChangeHandler = this.phoneChangeHandler.bind(this);
     this.submitUpdate = this.submitUpdate.bind(this);
   }
+
+  componentWillReceiveProps(nextProps) {
+
+    console.log("in will recieve props for details", nextProps);
+    this.setState({
+      username: nextProps.username,
+      email: nextProps.email,
+      phone: nextProps.phone,
+      imagePath: "http://localhost:3001/profilepics/" + nextProps.profileimage + ""
+    })
+  }
+
   //Call the Will Mount to set the auth Flag to false
   componentWillMount() {
     this.setState({
@@ -62,45 +77,51 @@ class Login extends Component {
 
     };
     //set the with credentials to true
-    axios.defaults.withCredentials = true;
-    //make a post request with the user data
-    axios.post("http://localhost:3001/buyerprofile", data).then(response => {
-      console.log("Status Code : ", response.status);
-      if (response.status === 200) {
-        this.setState({
-          authFlag: true
-        });
-      } else {
-        this.setState({
-          authFlag: false
-        });
-      }
-    });
+    // axios.defaults.withCredentials = true;
+    // //make a post request with the user data
+    // axios.post("http://localhost:3001/buyerprofile", data).then(response => {
+    //   console.log("Status Code : ", response.status);
+    //   if (response.status === 200) {
+    //     this.setState({
+    //       authFlag: true
+    //     });
+    //   } else {
+    //     this.setState({
+    //       authFlag: false
+    //     });
+    //   }
+    // });
+    this.props.dataUpdate_function(data)
   };
 
 
   componentDidMount() {
-    axios.get('http://localhost:3001/buyerprofile', {
-      params: {
-        emailcookie: this.state.emailcookie
-      }
-    })
-      .then((response) => {
-        console.log(response.data)
 
-        this.setState({
-          username: response.data.username,
-          email: response.data.email,
-          phone: response.data.phone,
-          imagePath: "http://localhost:3001/profilepics/" + response.data.profileimage + ""
+    var emailcookie = this.state.emailcookie;
+
+    this.props.dataFetch_function(emailcookie)
+
+    // axios.get('http://localhost:3001/buyerprofile', {
+    //   params: {
+    //     emailcookie: this.state.emailcookie
+    //   }
+    // })
+    //   .then((response) => {
+    //     console.log(response.data)
+
+    //     this.setState({
+    //       username: response.data.username,
+    //       email: response.data.email,
+    //       phone: response.data.phone,
+    //       imagePath: "http://localhost:3001/profilepics/" + response.data.profileimage + ""
 
 
-        })
-        //update the state with the response data
-        // this.setState({
-        //   books: this.state.books.concat(response.data)
-        // });
-      });
+    //     })
+    //update the state with the response data
+    // this.setState({
+    //   books: this.state.books.concat(response.data)
+    // });
+    // });
   }
 
   //Image change handler
@@ -215,4 +236,32 @@ class Login extends Component {
   }
 }
 //export Login Component
-export default Login;
+// export default Login;
+
+function mapStateToProps(state) {
+  console.log("in map state traveler_propfile", state);
+  return {
+    // authFlag: state.BuyerProfileReducer.authFlag,
+    username: state.BuyerProfileReducer.username,
+    email: state.BuyerProfileReducer.email,
+    phone: state.BuyerProfileReducer.phone,
+    profileimage: state.BuyerProfileReducer.profileimage,
+    authFlag: state.BuyerProfileUpdateReducer.authFlag,
+    //uploadFlag: state.BuyerProfileUploadReducer.uploadFlag,
+
+  };
+}
+
+const mapDispachToProps = dispatch => {
+  return {
+    dataFetch_function: (emailcookie) => dispatch(dataFetch_function(emailcookie)),
+    dataUpdate_function: (data) => dispatch(dataUpdate_function(data)),
+    // imageUpload_function: (data, config) => dispatch(imageUpload_function(data, config))
+
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispachToProps
+)(BuyerProfile);

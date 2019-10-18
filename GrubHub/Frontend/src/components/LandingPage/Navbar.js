@@ -35,6 +35,7 @@ class Navbar extends Component {
 
   //handle logout to destroy the cookie
   handleLogout = () => {
+    window.location.replace("/")
     cookie.remove("cookie", { path: "/" });
     cookie.remove("email", { path: "/" });
   };

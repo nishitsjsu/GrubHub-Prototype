@@ -4,9 +4,12 @@ import axios from "axios";
 import cookie from "react-cookies";
 import { Redirect } from "react-router";
 import { resolve } from "url";
+import { connect } from "react-redux";
+import ownerProfile_function from "../Action/OwnerProfileAction";
+import owner_dataUpdate_function from "../Action/OwnerProfileUpdateAction";
 
 //Define a Login Component
-class Login extends Component {
+class OwnerProfile extends Component {
   //call the constructor method
   constructor(props) {
     //Call the constrictor of Super class i.e The Component
@@ -33,6 +36,21 @@ class Login extends Component {
     this.cuisineChangeHandler = this.cuisineChangeHandler.bind(this);
     this.submitUpdate = this.submitUpdate.bind(this);
   }
+
+  componentWillReceiveProps(nextProps) {
+
+    console.log("in will recieve props for details", nextProps);
+    this.setState({
+      username: nextProps.username,
+      email: nextProps.email,
+      phone: nextProps.phone,
+      restaurant: nextProps.restaurant,
+      cuisine: nextProps.cuisine,
+      imagePath: "http://localhost:3001/profilepics/" + nextProps.imagePath + "",
+      imagePath1: "http://localhost:3001/profilepics/" + nextProps.imagePath1 + "",
+    })
+  }
+
   //Call the Will Mount to set the auth Flag to false
   componentWillMount() {
     this.setState({
@@ -90,47 +108,50 @@ class Login extends Component {
       idcookie: this.state.idcookie
     };
     //set the with credentials to true
-    axios.defaults.withCredentials = true;
-    //make a post request with the user data
-    axios.post("http://localhost:3001/ownerprofile", data).then(response => {
-      console.log("Status Code : ", response.status);
-      if (response.status === 200) {
-        this.setState({
-          authFlag: true
-        });
-      } else {
-        this.setState({
-          authFlag: false
-        });
-      }
-    });
+    // axios.defaults.withCredentials = true;
+    // //make a post request with the user data
+    // axios.post("http://localhost:3001/ownerprofile", data).then(response => {
+    //   console.log("Status Code : ", response.status);
+    //   if (response.status === 200) {
+    //     this.setState({
+    //       authFlag: true
+    //     });
+    //   } else {
+    //     this.setState({
+    //       authFlag: false
+    //     });
+    //   }
+    // });
+    this.props.owner_dataUpdate_function(data)
   };
 
 
   componentDidMount() {
-    axios.get('http://localhost:3001/ownerprofile', {
-      params: {
-        emailcookie: this.state.emailcookie
-      }
-    })
-      .then((response) => {
-        console.log(response.data)
+    var emailcookie = this.state.emailcookie;
+    this.props.ownerProfile_function(emailcookie)
+    // axios.get('http://localhost:3001/ownerprofile', {
+    //   params: {
+    //     emailcookie: this.state.emailcookie
+    //   }
+    // })
+    //   .then((response) => {
+    //     console.log(response.data)
 
-        this.setState({
-          username: response.data.username,
-          email: response.data.email,
-          phone: response.data.phone,
-          restaurant: response.data.restaurant,
-          cuisine: response.data.cuisine,
-          imagePath: "http://localhost:3001/profilepics/" + response.data.profileimage + "",
-          imagePath1: "http://localhost:3001/profilepics/" + response.data.restaurantimage + ""
+    //     this.setState({
+    //       username: response.data.username,
+    //       email: response.data.email,
+    //       phone: response.data.phone,
+    //       restaurant: response.data.restaurant,
+    //       cuisine: response.data.cuisine,
+    //       imagePath: "http://localhost:3001/profilepics/" + response.data.profileimage + "",
+    //       imagePath1: "http://localhost:3001/profilepics/" + response.data.restaurantimage + ""
 
-        })
-        //update the state with the response data
-        // this.setState({
-        //   books: this.state.books.concat(response.data)
-        // });
-      });
+    //     })
+    //     //update the state with the response data
+    //     // this.setState({
+    //     //   books: this.state.books.concat(response.data)
+    //     // });
+    //   });
   }
 
 
@@ -314,4 +335,36 @@ class Login extends Component {
   }
 }
 //export Login Component
-export default Login;
+// export default Login;
+
+
+function mapStateToProps(state) {
+  console.log("in map state traveler_propfile", state);
+  return {
+    // authFlag: state.OwnerProfileReducer.authFlag,
+    username: state.OwnerProfileReducer.username,
+    email: state.OwnerProfileReducer.email,
+    phone: state.OwnerProfileReducer.phone,
+    restaurant: state.OwnerProfileReducer.restaurant,
+    cuisine: state.OwnerProfileReducer.cuisine,
+    imagePath: state.OwnerProfileReducer.imagePath,
+    imagePath1: state.OwnerProfileReducer.imagePath1,
+    authFlag: state.OwnerProfileUpdateReducer.authFlag,
+    //uploadFlag: state.BuyerProfileUploadReducer.uploadFlag,
+
+  };
+}
+
+const mapDispachToProps = dispatch => {
+  return {
+    ownerProfile_function: (emailcookie) => dispatch(ownerProfile_function(emailcookie)),
+    owner_dataUpdate_function: (data) => dispatch(owner_dataUpdate_function(data)),
+    // imageUpload_function: (data, config) => dispatch(imageUpload_function(data, config))
+
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispachToProps
+)(OwnerProfile);

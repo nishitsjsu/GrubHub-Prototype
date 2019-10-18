@@ -1,10 +1,13 @@
 var express = require('express');
+var app = express();
 var router = express.Router();
 var pool = require('../Db/Connections').pool;
 var cont = require('../Db/Connections').cont;
 var bcrypt = require('bcrypt');
 var upload = require('../Image/UploadImage').upload;
 var storage = require('../Image/UploadImage').storage;
+
+app.use(express.static('public'))
 
 var resultObject;
 
@@ -76,7 +79,7 @@ router.post("/login", function (req, res) {
                             res.end("Successful Login");
                         } else {
                             console.log(" Invalid credentials found ");
-                            res.writeHead(201, {
+                            res.writeHead(400, {
                                 "Content-Type": "text/plain"
                             });
                             res.end("Invalid credentials in Login");
@@ -85,7 +88,7 @@ router.post("/login", function (req, res) {
                     });
                 } else {
                     console.log(" No users found ");
-                    res.writeHead(201, {
+                    res.writeHead(400, {
                         "Content-Type": "text/plain"
                     });
                     res.end("Unsuccessful Login");
@@ -119,6 +122,10 @@ router.post("/ownersignup", function (req, res) {
             db.query(sql, (err, result) => {
                 if (err) {
                     console.log("Error occured : " + err);
+                    res.writeHead(400, {
+                        "Content-Type": "text/plain"
+                    });
+                    res.end("Unsuccessful Signup");
                 } else {
                     res.writeHead(200, {
                         "Content-Type": "text/plain"
@@ -154,6 +161,10 @@ router.post("/buyersignup", function (req, res) {
             db.query(sql, (err, result) => {
                 if (err) {
                     console.log("Error occured : " + err);
+                    res.writeHead(400, {
+                        "Content-Type": "text/plain"
+                    });
+                    res.end("Unsuccessful Signup");
                 } else {
                     res.writeHead(200, {
                         "Content-Type": "text/plain"
@@ -227,11 +238,15 @@ router.post("/buyerprofile", function (req, res) {
         db.query(sql, (err, result) => {
             if (err) {
                 console.log("Error occured : " + err);
+                res.writeHead(400, {
+                    "Content-Type": "text/plain"
+                });
+                res.end("Unsuccessful buyerprofile");
             } else {
                 res.writeHead(200, {
                     "Content-Type": "text/plain"
                 });
-                res.end("Successful Signup");
+                res.end("Successful buyerprofile");
             }
         });
         db.release()
@@ -254,6 +269,10 @@ router.get("/ownerprofile", function (req, res) {
         db.query(sql, (err, result) => {
             if (err) {
                 console.log("Error occured : " + err);
+                res.writeHead(400, {
+                    "Content-Type": "text/plain"
+                });
+                res.end("Unsuccessful buyerprofile post");
             } else {
 
 

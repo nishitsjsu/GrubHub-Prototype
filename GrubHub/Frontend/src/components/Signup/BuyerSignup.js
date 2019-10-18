@@ -3,9 +3,11 @@ import "../Login/login.css";
 import axios from "axios";
 import cookie from "react-cookies";
 import { Redirect } from "react-router";
+import { connect } from "react-redux";
+import buyerSignup_function from "../Action/BuyerSignupAction"
 
 //Define a Login Component
-class Login extends Component {
+class BuyerSignup extends Component {
   //call the constructor method
   constructor(props) {
     //Call the constrictor of Super class i.e The Component
@@ -23,6 +25,22 @@ class Login extends Component {
     this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
     this.submitSignup = this.submitSignup.bind(this);
   }
+
+  componentWillReceiveProps(nextProps) {
+
+    console.log("in will recieve props for details", nextProps);
+    this.setState({
+      authFlag: nextProps.authFlag
+
+    })
+  }
+
+  componentDidMount() {
+    this.setState({
+      authFlag: false
+    });
+  }
+
   //Call the Will Mount to set the auth Flag to false
   componentWillMount() {
     this.setState({
@@ -58,34 +76,36 @@ class Login extends Component {
       password: this.state.password,
       email: this.state.email
     };
+
+    this.props.buyerSignup_function(data)
     //set the with credentials to true
-    axios.defaults.withCredentials = true;
-    //make a post request with the user data
-    axios.post("http://localhost:3001/buyersignup", data).then(response => {
-      console.log("Status Code : ", response.status);
-      if (response.status === 200) {
-        window.location.replace("/login");
-        this.setState({
-          authFlag: true
-        });
-      } else {
-        this.setState({
-          authFlag: false
-        });
-      }
-    });
+    // axios.defaults.withCredentials = true;
+    // //make a post request with the user data
+    // axios.post("http://localhost:3001/buyersignup", data).then(response => {
+    //   console.log("Status Code : ", response.status);
+    //   if (response.status === 200) {
+    //     window.location.replace("/login");
+    //     this.setState({
+    //       authFlag: true
+    //     });
+    //   } else {
+    //     this.setState({
+    //       authFlag: false
+    //     });
+    //   }
+    // });
   };
 
   render() {
     //redirect based on successful login
     let redirectVar = null;
-    if (cookie.load("cookie")) {
-      redirectVar = <Redirect to="/home" />;
+    if (this.state.authFlag) {
+      redirectVar = <Redirect to="/login" />;
     }
     return (
       <div>
 
-        {/* {redirectVar} */}
+        {redirectVar}
         <div class="wrapper fadeInDown">
           <div id="formContent">
             <div class="fadeIn first">
@@ -136,4 +156,25 @@ class Login extends Component {
   }
 }
 //export Login Component
-export default Login;
+// export default Login;
+
+
+function mapStateToProps(state) {
+  console.log("in map state buyer_signup", state);
+  return {
+    authFlag: state.BuyerSignupReducer.authFlag,
+
+  };
+}
+
+const mapDispachToProps = dispatch => {
+  return {
+    buyerSignup_function: (data) => dispatch(buyerSignup_function(data)),
+
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispachToProps
+)(BuyerSignup);

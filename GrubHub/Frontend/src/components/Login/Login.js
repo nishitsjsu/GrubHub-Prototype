@@ -3,6 +3,8 @@ import "./login.css";
 import axios from "axios";
 import cookie from "react-cookies";
 import { Redirect } from "react-router";
+import { connect } from "react-redux";
+import login_function from "../Action/LoginAction"
 //var alert = require("react-alert");
 
 //Define a Login Component
@@ -16,7 +18,8 @@ class Login extends Component {
       username: "",
       password: "",
       radio: "",
-      authFlag: false
+      authFlag: false,
+      invalidFlag: false
     };
     //Bind the handlers to this class
     this.usernameChangeHandler = this.usernameChangeHandler.bind(this);
@@ -24,7 +27,25 @@ class Login extends Component {
     this.submitLogin = this.submitLogin.bind(this);
     this.radioChangeHandler = this.radioChangeHandler.bind(this);
   }
+
+
+  componentWillReceiveProps(nextProps) {
+
+    console.log("in will recieve props for details", nextProps);
+    this.setState({
+      authFlag: nextProps.authFlag,
+      invalidFlag: nextProps.invalidFlag
+
+    })
+  }
+
   //Call the Will Mount to set the auth Flag to false
+  componentDidMount() {
+    this.setState({
+      authFlag: false
+    });
+  }
+
   componentWillMount() {
     this.setState({
       authFlag: false
@@ -59,49 +80,82 @@ class Login extends Component {
       radio: this.state.radio
     };
     //set the with credentials to true
-    axios.defaults.withCredentials = true;
-    //make a post request with the user data
-    axios.post("http://localhost:3001/login", data).then(response => {
-      console.log("Status Code : ", response.status);
-      if (response.status === 200) {
-        if (this.state.radio === "buyer") {
-          window.location.replace("/buyerhome");
-        } else if (this.state.radio === "owner") {
-          window.location.replace("/ownerhome");
-        }
-        this.setState({
-          authFlag: true
-        });
-      } else if (response.status === 201) {
-        console.log("Inside 201 response");
-        alert("Invalid credentials");
-        this.setState({
-          authFlag: false
-        });
-      } else {
-        this.setState({
-          authFlag: false
-        });
-      }
-    });
+    // axios.defaults.withCredentials = true;
+    // //make a post request with the user data
+    // axios.post("http://localhost:3001/login", data).then(response => {
+    //   console.log("Status Code : ", response.status);
+    //   if (response.status === 200) {
+    //     if (this.state.radio === "buyer") {
+    //       window.location.replace("/buyerhome");
+    //     } else if (this.state.radio === "owner") {
+    //       window.location.replace("/ownerhome");
+    //     }
+    //     this.setState({
+    //       authFlag: true
+    //     });
+    //   }
+    //   // else if (response.status === 201) {
+    //   //   console.log("Inside 201 response");
+    //   //   alert("Invalid credentials");
+    //   //   this.setState({
+    //   //     authFlag: false
+    //   //   });
+    //   // } 
+    //   else {
+    //     this.setState({
+    //       authFlag: false
+    //     });
+    //   }
+    // }).catch(res => {
+    //   console.log("Inside error reponse")
+    //   alert("Invalid credentials");
+    //   this.setState({
+    //     message: "Incorrect username or password"
+    //   })
+    // });
+
+    this.props.login_function(data)
   };
 
   render() {
     //redirect based on successful login
     let redirectVar = null;
+    let invalidAlert = null;
     let redirectAuth = null;
-    if (cookie.load("cookie")) {
-      redirectVar = <Redirect to="/home" />;
+    // if (cookie.load("cookie")) {
+    //   redirectVar = <Redirect to="/home" />;
+    // }
+    // if (cookie.load("cookie")) {
+    //   redirectAuth = <Redirect to="/home" />;
+    // }
+    if (this.state.authFlag && this.state.radio == "owner") {
+      console.log("inside owner")
+
+      redirectAuth = <Redirect to="/ownerhome" />;
+      // redirectAuth = <Redirect to= />;
+    } else if (this.state.authFlag && this.state.radio == "buyer") {
+      console.log("inside buyer")
+
+      redirectAuth = <Redirect to="/buyerhome" />;
+
     }
-    if (cookie.load("cookie")) {
-      redirectAuth = <Redirect to="/home" />;
+    if (!this.state.authFlag) {
+      console.log("inside else")
+      redirectAuth = <Redirect to="/login" />;
+    }
+    if (this.state.invalidFlag) {
+      invalidAlert = (
+        <h3>Invalid credentials!</h3>
+
+      )
     }
     return (
       <div>
-        {/* {redirectVar}
-        {redirectAuth} */}
+        {/* {redirectVar} */}
+        {redirectAuth}
         <div class="wrapper fadeInDown">
           <div id="formContent">
+            {invalidAlert}
             <div class="fadeIn first">
               {/* <h2>Lets's log you in!</h2> */}
               <img
@@ -156,4 +210,24 @@ class Login extends Component {
   }
 }
 //export Login Component
-export default Login;
+// export default Login;
+
+function mapStateToProps(state) {
+  console.log("in map state login", state);
+  return {
+    authFlag: state.LoginReducer.authFlag,
+    invalidFlag: state.LoginReducer.invalidFlag
+  };
+}
+
+const mapDispachToProps = dispatch => {
+  return {
+    login_function: (data) => dispatch(login_function(data)),
+
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispachToProps
+)(Login);
