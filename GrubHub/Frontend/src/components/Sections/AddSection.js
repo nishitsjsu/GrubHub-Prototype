@@ -15,6 +15,7 @@ class AddSection extends Component {
             sectionname: "",
             msg: "",
             idcookie: cookie.load("id"),
+            emailcookie: cookie.load("email"),
             authFlag: false
         };
         //Bind the handlers to this class
@@ -41,8 +42,8 @@ class AddSection extends Component {
         e.preventDefault();
         const data = {
             sectionname: this.state.sectionname,
-            idcookie: this.state.idcookie
-
+            idcookie: this.state.idcookie,
+            emailcookie: this.state.emailcookie
         };
 
         console.log(data)

@@ -10,6 +10,7 @@ var path = require("path");
 var mysql = require("mysql");
 app.set("view engine", "ejs");
 const bcrypt = require('bcrypt');
+require("./mongoose");
 
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));

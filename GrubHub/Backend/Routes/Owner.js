@@ -4,6 +4,8 @@ var pool = require('../Db/Connections').pool;
 var cont = require('../Db/Connections').cont;
 var upload = require('../Image/UploadImage').upload;
 var storage = require('../Image/UploadImage').storage;
+var Section = require("../Models/section")
+const mongoose = require("mongoose")
 
 router.get("/ownerhome", function (req, res) {
     console.log("Inside OwnerHome");
@@ -297,33 +299,62 @@ router.post("/deletesectionitems", function (req, res) {
     });
 });
 
+// router.post("/addsection", function (req, res) {
+//     console.log("Inside Add Section Request");
+//     console.log("Req Body : ", req.body);
+//     var sectionname = req.body.sectionname;
+//     var idcookie = req.body.idcookie;
+//     var emailcookie = req.body.emailcookie
+//     console.log(sectionname)
+
+//     sql = `insert into sections (sectionname,ownerid) values ('${sectionname}',${idcookie})`
+//     console.log(sql)
+
+//     pool.getConnection(function (err, db) {
+//         if (err) {
+//             console.log("Error while getting connection")
+//         }
+//         db.query(sql, (err, result) => {
+//             if (err) {
+//                 console.log("Error occured : " + err);
+//             } else {
+//                 console.log("Data inserted into orders table successfully!")
+//                 res.writeHead(200, {
+//                     "Content-Type": "text/plain"
+//                 });
+//                 //console.log(JSON.stringify(resultObject))
+//                 res.end("Section added successfully");
+//             }
+//         })
+//         db.release()
+//     });
+// });
+
 router.post("/addsection", function (req, res) {
     console.log("Inside Add Section Request");
     console.log("Req Body : ", req.body);
     var sectionname = req.body.sectionname;
     var idcookie = req.body.idcookie;
+    var emailcookie = req.body.emailcookie
     console.log(sectionname)
-    var idcookie = req.body.idcookie;
-    sql = `insert into sections (sectionname,ownerid) values ('${sectionname}',${idcookie})`
-    console.log(sql)
 
-    pool.getConnection(function (err, db) {
-        if (err) {
-            console.log("Error while getting connection")
-        }
-        db.query(sql, (err, result) => {
-            if (err) {
-                console.log("Error occured : " + err);
-            } else {
-                console.log("Data inserted into orders table successfully!")
-                res.writeHead(200, {
-                    "Content-Type": "text/plain"
-                });
-                //console.log(JSON.stringify(resultObject))
-                res.end("Section added successfully");
-            }
-        })
-        db.release()
+    const section = new Section({
+        sectionname: sectionname,
+        ownername: emailcookie
+    })
+    console.log("object creatd " + section)
+    section.save().then(result => {
+        console.log("Section added successfully " + result);
+        res.writeHead(200, {
+            "Content-Type": "text/plain"
+        });
+        res.end("Successful Add section");
+    }).catch(error => {
+        console.log("error occured" + error);
+        res.writeHead(400, {
+            "Content-Type": "text/plain"
+        });
+        res.end("Unsuccessful add section");
     });
 });
 
