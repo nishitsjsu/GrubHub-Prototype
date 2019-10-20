@@ -20,7 +20,8 @@ class Home extends Component {
     componentDidMount() {
         axios.get('http://localhost:3001/ownerhome', {
             params: {
-                idcookie: this.state.idcookie
+                idcookie: this.state.idcookie,
+                emailcookie: this.state.emailcookie
             }
         })
             .then((response) => {

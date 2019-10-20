@@ -12,7 +12,8 @@ class MenuData extends Component {
         this.state = {
             section: this.props.data.sectionid,
             items: [],
-            idcookie: cookie.load("id")
+            idcookie: cookie.load("id"),
+            emailcookie: cookie.load("email")
         }
 
     }
@@ -21,8 +22,9 @@ class MenuData extends Component {
     componentDidMount() {
         axios.get('http://localhost:3001/sectiondetails', {
             params: {
-                sectionid: this.props.data.sectionid,
-                idcookie: this.state.idcookie
+                sectionid: this.props.data.sectionname,
+                idcookie: this.state.idcookie,
+                emailcookie: this.state.emailcookie
             }
         })
             .then((response) => {
@@ -77,8 +79,6 @@ class MenuData extends Component {
                 </table>
             </div>
         )
-
-
     }
 }
 

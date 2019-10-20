@@ -4,7 +4,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { Redirect } from "react-router";
 import SectionDetails from "../Sections/SectionDetails";
-import { Z_BLOCK } from "zlib";
+// import { Z_BLOCK } from "zlib";
 
 class SectionDetailsData extends Component {
     constructor(props) {
@@ -13,7 +13,7 @@ class SectionDetailsData extends Component {
             name: this.props.data.name,
             description: this.props.data.description,
             price: this.props.data.price,
-            itemid: this.props.data.itemid,
+            itemid: this.props.data._id,
             image: "http://localhost:3001/profilepics/" + this.props.data.itemimage + "",
             image1: "http://localhost:3001/profilepics/d.jpeg",
             authFlag: false

@@ -13,7 +13,8 @@ class SectionDetails extends Component {
         this.state = {
             section: this.props.match.params.sectionid,
             items: [],
-            idcookie: cookie.load("id")
+            idcookie: cookie.load("id"),
+            emailcookie: cookie.load("email")
         }
         this.deleteSection = this.deleteSection.bind(this);
     }
@@ -23,7 +24,8 @@ class SectionDetails extends Component {
         axios.get('http://localhost:3001/sectiondetails', {
             params: {
                 sectionid: this.props.match.params.sectionid,
-                idcookie: this.state.idcookie
+                idcookie: this.state.idcookie,
+                emailcookie: this.state.emailcookie
             }
         })
             .then((response) => {
@@ -41,7 +43,8 @@ class SectionDetails extends Component {
         //prevent page from refresh
         e.preventDefault();
         const data = {
-            sectionid: this.state.section
+            sectionid: this.state.section,
+            emailcookie: this.state.emailcookie
         };
         //set the with credentials to true
         axios.defaults.withCredentials = true;

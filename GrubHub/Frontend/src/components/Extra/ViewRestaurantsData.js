@@ -22,7 +22,7 @@ class ViewRestaurantsData extends Component {
                 <td>{this.props.data.cuisine}</td>
                 {/* <td>{this.props.data.personaddress}</td>
                 <td>{this.props.data.status}</td> */}
-                <Link to={`/buyermenu/${this.props.data.id}`} ><button style={{ marginLeft: "2%" }} className="btn btn-primary">Details</button></Link>
+                <Link to={`/buyermenu/${this.props.data.owneremail}`} ><button style={{ marginLeft: "2%" }} className="btn btn-primary">Details</button></Link>
             </Fragment>
         )
 

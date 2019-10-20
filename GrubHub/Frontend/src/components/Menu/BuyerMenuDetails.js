@@ -17,7 +17,10 @@ class MenuDetails extends Component {
             itemprice: this.props.data.price,
             idcookie: cookie.load("id"),
             image: "http://localhost:3001/profilepics/" + this.props.data.itemimage + "",
-            quantity: ""
+            quantity: "",
+            owneremail: this.props.data.owneremail,
+            restaurant: this.props.data.restaurantname,
+            emailcookie: cookie.load("email")
         }
         this.submitAdd = this.submitAdd.bind(this);
         this.quantityChangeHandler = this.quantityChangeHandler.bind(this);
@@ -38,7 +41,10 @@ class MenuDetails extends Component {
             itemname: this.state.itemname,
             itemprice: this.state.itemprice,
             quantity: this.state.quantity,
-            idcookie: this.state.idcookie
+            idcookie: this.state.idcookie,
+            emailcookie: this.state.emailcookie,
+            owneremail: this.state.owneremail,
+            restaurant: this.state.restaurant
         };
         //set the with credentials to true
         axios.defaults.withCredentials = true;
@@ -78,7 +84,6 @@ class MenuDetails extends Component {
 
         return (
             <Fragment>
-
                 <td>{this.props.data.name}</td>
                 <td style={{ width: "20%" }}><img style={{ width: "50%", height: "20%" }} src={this.state.image} /></td>
                 <td>{this.props.data.description}</td>
@@ -87,8 +92,6 @@ class MenuDetails extends Component {
                 <td><button onClick={this.submitAdd} className="btn btn-primary">Add</button></td>
             </Fragment>
         )
-
-
     }
 }
 

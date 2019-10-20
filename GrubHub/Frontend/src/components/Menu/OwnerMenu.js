@@ -11,7 +11,8 @@ class OwnerMenu extends Component {
         super(props);
         this.state = {
             sections: [],
-            idcookie: cookie.load("id")
+            idcookie: cookie.load("id"),
+            emailcookie: cookie.load("email")
         }
         this.viewButton = this.viewButton.bind(this);
     }
@@ -20,7 +21,8 @@ class OwnerMenu extends Component {
         axios.get('http://localhost:3001/ownersection', {
             params: {
                 sectionid: this.props.match.params.sectionid,
-                idcookie: this.state.idcookie
+                idcookie: this.state.idcookie,
+                emailcookie: this.state.emailcookie,
             }
         })
             .then((response) => {

@@ -20,7 +20,8 @@ class BuyerFutureOrders extends Component {
     componentDidMount() {
         axios.get('http://localhost:3001/buyerfutureorders', {
             params: {
-                idcookie: this.state.idcookie
+                idcookie: this.state.idcookie,
+                emailcookie: this.state.emailcookie,
             }
         })
             .then((response) => {
@@ -43,8 +44,8 @@ class BuyerFutureOrders extends Component {
                 //     <OrderData key={Math.random} data={order}></OrderData>
                 // </tr>
                 <tr key="index">
-                    <td>{order.orderid}</td>
-                    <td>{order.restaurantname}</td>
+                    <td>{order._id}</td>
+                    <td>{order.restaurant}</td>
                     <td>{order.status}</td>
                 </tr>
             )

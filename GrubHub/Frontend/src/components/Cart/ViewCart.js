@@ -13,6 +13,7 @@ class ViewCart extends Component {
             total: "",
             idcookie: cookie.load("id"),
             namecookie: cookie.load("name"),
+            emailcookie: cookie.load("email"),
             address: ""
         }
         this.goBack = this.goBack.bind(this)
@@ -30,7 +31,8 @@ class ViewCart extends Component {
     componentDidMount() {
         axios.get('http://localhost:3001/viewcart', {
             params: {
-                idcookie: this.state.idcookie
+                idcookie: this.state.idcookie,
+                emailcookie: this.state.emailcookie
             }
         })
             .then((response) => {
@@ -43,7 +45,8 @@ class ViewCart extends Component {
 
         axios.get('http://localhost:3001/calculateSum', {
             params: {
-                idcookie: this.state.idcookie
+                idcookie: this.state.idcookie,
+                emailcookie: this.state.emailcookie
             }
         })
             .then((response) => {
@@ -68,7 +71,8 @@ class ViewCart extends Component {
             items: this.state.items,
             idcookie: this.state.idcookie,
             namecookie: this.state.namecookie,
-            address: this.state.address
+            address: this.state.address,
+            emailcookie: this.state.emailcookie
         };
         //set the with credentials to true
         axios.defaults.withCredentials = true;

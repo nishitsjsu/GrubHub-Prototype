@@ -43,7 +43,7 @@ class OrderData extends Component {
                 <td>{this.props.data.personname}</td>
                 <td>{this.props.data.personaddress}</td>
                 <td>{this.props.data.status}</td>
-                <Link to={`/orderdetails/${this.props.data.orderid}`} ><button className="btn btn-primary">Details</button></Link>
+                <Link to={`/orderdetails/${this.props.data._id}`} ><button className="btn btn-primary">Details</button></Link>
             </Fragment>
         )
 

@@ -193,6 +193,8 @@ router.post("/login", function (req, res) {
                     // var emailrow = row.email;
                     var id = row._id;
                     var hash = row.password;
+                    var cuisine = row.cuisine;
+                    var restaurant = row.restaurantname;
 
                     console.log("HAsh " + name + id + hash)
 
@@ -213,6 +215,16 @@ router.post("/login", function (req, res) {
                             path: "/"
                         });
                         res.cookie("name", name, {
+                            maxAge: 900000,
+                            httpOnly: false,
+                            path: "/"
+                        });
+                        res.cookie("cuisine", cuisine, {
+                            maxAge: 900000,
+                            httpOnly: false,
+                            path: "/"
+                        });
+                        res.cookie("restaurant", restaurant, {
                             maxAge: 900000,
                             httpOnly: false,
                             path: "/"
@@ -293,6 +305,7 @@ router.post("/ownersignup", function (req, res) {
     var password = req.body.password;
     var email = req.body.email;
     var restaurant = req.body.restaurant;
+    var cuisine = req.body.cuisine;
     var zipcode = req.body.zipcode;
 
     bcrypt.hash(req.body.password, 10, function (err, hash) {
@@ -307,7 +320,7 @@ router.post("/ownersignup", function (req, res) {
             restaurantname: restaurant,
             zipcode: zipcode,
             restaurantimage: "",
-            cuisine: ""
+            cuisine: cuisine
         })
         console.log("object creatd " + owner)
         owner.save().then(result => {

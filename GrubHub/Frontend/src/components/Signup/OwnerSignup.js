@@ -26,6 +26,7 @@ class OwnerSignup extends Component {
     this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
     this.emailChangeHandler = this.emailChangeHandler.bind(this);
     this.restaurantChangeHandler = this.restaurantChangeHandler.bind(this);
+    this.cuisineChangeHandler = this.cuisineChangeHandler.bind(this);
     this.zipcodeChangeHandler = this.zipcodeChangeHandler.bind(this);
     this.submitSignup = this.submitSignup.bind(this);
   }
@@ -75,6 +76,12 @@ class OwnerSignup extends Component {
     });
   };
 
+  cuisineChangeHandler = e => {
+    this.setState({
+      cuisine: e.target.value
+    });
+  };
+
   zipcodeChangeHandler = e => {
     this.setState({
       zipcode: e.target.value
@@ -90,7 +97,8 @@ class OwnerSignup extends Component {
       password: this.state.password,
       email: this.state.email,
       restaurant: this.state.restaurant,
-      zipcode: this.state.zipcode
+      zipcode: this.state.zipcode,
+      cuisine: this.state.cuisine
     };
 
     this.props.ownerSignup_function(data)
@@ -163,6 +171,14 @@ class OwnerSignup extends Component {
                 class="fadeIn third"
                 name="restaurant"
                 placeholder="Restaurant Name"
+              />
+              <input
+                onChange={this.cuisineChangeHandler}
+                type="text"
+                id="cuisine"
+                class="fadeIn third"
+                name="cuisine"
+                placeholder="Cuisine"
               />
               <input
                 onChange={this.zipcodeChangeHandler}

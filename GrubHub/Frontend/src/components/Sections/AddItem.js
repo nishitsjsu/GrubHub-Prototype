@@ -3,6 +3,7 @@ import "../Profile/op.css";
 import axios from "axios";
 import cookie from "react-cookies";
 import { Redirect } from "react-router";
+// import { threadId } from "worker_threads";
 
 //Define a Login Component
 class AddItem extends Component {
@@ -19,6 +20,9 @@ class AddItem extends Component {
             imagePath: "http://localhost:3001/profilepics/def.png",
             itemimage: "",
             idcookie: cookie.load("id"),
+            emailcookie: cookie.load("email"),
+            cuisinecookie: cookie.load("cuisine"),
+            restaurantcookie: cookie.load("restaurant"),
             authFlag: false
         };
         //Bind the handlers to this class
@@ -62,7 +66,10 @@ class AddItem extends Component {
             price: this.state.price,
             sectionid: this.state.sectionid,
             itemimage: this.state.itemimage,
-            idcookie: this.state.idcookie
+            idcookie: this.state.idcookie,
+            emailcookie: this.state.emailcookie,
+            cuisinecookie: this.state.cuisinecookie,
+            restaurantcookie: this.state.restaurantcookie
 
         };
         //set the with credentials to true

@@ -10,28 +10,30 @@ class Navbar extends Component {
     super(props);
     this.state = {
       idcookie: cookie.load("id"),
+      emailcookie: cookie.load("email"),
       cartitem: 0,
       authFlag: false
     };
     this.handleLogout = this.handleLogout.bind(this);
   }
 
-  // componentDidMount() {
-  //   axios.get('http://localhost:3001/cartitems', {
-  //     params: {
-  //       idcookie: this.state.idcookie
-  //     }
-  //   })
-  //     .then((response) => {
-  //       console.log("Received response")
-  //       console.log(response.data)
-  //       //update the state with the response data
-  //       this.setState({
+  componentDidMount() {
+    axios.get('http://localhost:3001/cartitems', {
+      params: {
+        idcookie: this.state.idcookie,
+        emailcookie: this.state.emailcookie
+      }
+    })
+      .then((response) => {
+        console.log("Received response")
+        console.log(response.data)
+        //update the state with the response data
+        this.setState({
 
-  //         cartitem: response.data
-  //       });
-  //     });
-  // }
+          cartitem: response.data
+        });
+      });
+  }
 
   //handle logout to destroy the cookie
   handleLogout = () => {

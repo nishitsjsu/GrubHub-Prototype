@@ -11,7 +11,8 @@ class OwnerSection extends Component {
         super(props);
         this.state = {
             sections: [],
-            idcookie: cookie.load("id")
+            idcookie: cookie.load("id"),
+            emailcookie: cookie.load("email")
         }
 
     }
@@ -19,7 +20,8 @@ class OwnerSection extends Component {
     componentDidMount() {
         axios.get('http://localhost:3001/ownersection', {
             params: {
-                idcookie: this.state.idcookie
+                idcookie: this.state.idcookie,
+                emailcookie: this.state.emailcookie
             }
         })
             .then((response) => {

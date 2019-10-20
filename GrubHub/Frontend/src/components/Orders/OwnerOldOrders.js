@@ -20,7 +20,8 @@ class OwnerOldOrders extends Component {
     componentDidMount() {
         axios.get('http://localhost:3001/owneroldorders', {
             params: {
-                idcookie: this.state.idcookie
+                idcookie: this.state.idcookie,
+                emailcookie: this.state.emailcookie,
             }
         })
             .then((response) => {

@@ -9,7 +9,8 @@ class MenuData extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            section: this.props.data.sectionid,
+            sectionname: this.props.data.sectionname,
+            ownername: this.props.data.ownername,
             items: []
         }
 
@@ -19,8 +20,8 @@ class MenuData extends Component {
     componentDidMount() {
         axios.get('http://localhost:3001/sectiondetailsbuyer', {
             params: {
-                sectionid: this.props.data.sectionid,
-                ownerid: this.props.data.ownerid
+                sectionname: this.state.sectionname,
+                ownername: this.state.ownername,
             }
         })
             .then((response) => {
