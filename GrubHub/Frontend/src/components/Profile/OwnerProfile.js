@@ -105,7 +105,8 @@ class OwnerProfile extends Component {
       phone: this.state.phone,
       restaurant: this.state.restaurant,
       cuisine: this.state.cuisine,
-      idcookie: this.state.idcookie
+      idcookie: this.state.idcookie,
+      emailcookie: this.state.emailcookie
     };
     //set the with credentials to true
     // axios.defaults.withCredentials = true;

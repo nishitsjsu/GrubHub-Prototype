@@ -415,6 +415,45 @@ router.post("/buyersignup", function (req, res) {
 
 
 
+// router.post("/ownerprofile", function (req, res) {
+//     console.log("Inside update owner profile Request");
+//     console.log("Req Body : ", req.body);
+
+//     var name = req.body.username;
+//     var email = req.body.email;
+//     var phone = req.body.phone;
+//     var restaurant = req.body.restaurant;
+//     var cuisine = req.body.cuisine;
+//     idcookie = req.body.idcookie;
+
+//     sql = `update owner set name='${name}',email='${email}',restaurantname='${restaurant}',phone='${phone}',cuisine='${cuisine}' where email='${email}'`;
+//     //sql="Select name,email from " + radio + " where password="' + password + '";
+//     console.log("SQL: " + sql);
+
+//     pool.getConnection(function (err, db) {
+//         if (err) {
+//             console.log("Error while getting connection")
+//         }
+//         db.query(sql, (err, result) => {
+//             if (err) {
+//                 console.log("Error occured : " + err);
+//             } else {
+
+//                 console.log("Profile updated successfully")
+
+//                 // sql1 = `insert into restaurant (restaurantname,restaurantimage) values ()`
+
+//                 res.writeHead(200, {
+//                     "Content-Type": "text/plain"
+//                 });
+//                 res.end("Successful Signup");
+//             }
+//         });
+//         db.release()
+//     });
+// });
+
+
 router.post("/ownerprofile", function (req, res) {
     console.log("Inside update owner profile Request");
     console.log("Req Body : ", req.body);
@@ -424,34 +463,60 @@ router.post("/ownerprofile", function (req, res) {
     var phone = req.body.phone;
     var restaurant = req.body.restaurant;
     var cuisine = req.body.cuisine;
-    idcookie = req.body.idcookie;
+    var idcookie = req.body.idcookie;
+    var emailcookie = req.body.emailcookie;
 
-    sql = `update owner set name='${name}',email='${email}',restaurantname='${restaurant}',phone='${phone}',cuisine='${cuisine}' where email='${email}'`;
-    //sql="Select name,email from " + radio + " where password="' + password + '";
-    console.log("SQL: " + sql);
-
-    pool.getConnection(function (err, db) {
-        if (err) {
-            console.log("Error while getting connection")
-        }
-        db.query(sql, (err, result) => {
-            if (err) {
-                console.log("Error occured : " + err);
-            } else {
-
-                console.log("Profile updated successfully")
-
-                // sql1 = `insert into restaurant (restaurantname,restaurantimage) values ()`
-
-                res.writeHead(200, {
-                    "Content-Type": "text/plain"
-                });
-                res.end("Successful Signup");
-            }
-        });
-        db.release()
-    });
+    Owner.findOneAndUpdate({ email: emailcookie }, { $set: { name: name, email: email, restaurantname: restaurant, phone: phone, cuisine: cuisine } }, { new: true })
+        .then((doc) => {
+            console.log("profile update success", doc);
+            res.writeHead(200, {
+                "Content-Type": "text/plain"
+            });
+            res.end("Successfully updated status");
+        }).catch((e) => {
+            res.writeHead(400, {
+                "Content-Type": "text/plain"
+            });
+            res.end("Unsuccessfully updated profile");
+        })
 });
+
+
+
+// router.post("/buyerprofile", function (req, res) {
+//     console.log("Inside update buyer profile Request");
+//     console.log("Req Body : ", req.body);
+
+//     var name = req.body.username;
+//     var email = req.body.email;
+//     var phone = req.body.phone;
+
+
+//     sql = `update buyer set name='${name}',email='${email}',phone='${phone}' where email='${email}'`;
+//     //sql="Select name,email from " + radio + " where password="' + password + '";
+//     console.log("SQL: " + sql);
+
+//     pool.getConnection(function (err, db) {
+//         if (err) {
+//             console.log("Error while getting connection")
+//         }
+//         db.query(sql, (err, result) => {
+//             if (err) {
+//                 console.log("Error occured : " + err);
+//                 res.writeHead(400, {
+//                     "Content-Type": "text/plain"
+//                 });
+//                 res.end("Unsuccessful buyerprofile");
+//             } else {
+//                 res.writeHead(200, {
+//                     "Content-Type": "text/plain"
+//                 });
+//                 res.end("Successful buyerprofile");
+//             }
+//         });
+//         db.release()
+//     });
+// });
 
 
 router.post("/buyerprofile", function (req, res) {
@@ -461,137 +526,240 @@ router.post("/buyerprofile", function (req, res) {
     var name = req.body.username;
     var email = req.body.email;
     var phone = req.body.phone;
+    var emailcookie = req.body.emailcookie;
 
-
-    sql = `update buyer set name='${name}',email='${email}',phone='${phone}' where email='${email}'`;
-    //sql="Select name,email from " + radio + " where password="' + password + '";
-    console.log("SQL: " + sql);
-
-    pool.getConnection(function (err, db) {
-        if (err) {
-            console.log("Error while getting connection")
-        }
-        db.query(sql, (err, result) => {
-            if (err) {
-                console.log("Error occured : " + err);
-                res.writeHead(400, {
-                    "Content-Type": "text/plain"
-                });
-                res.end("Unsuccessful buyerprofile");
-            } else {
-                res.writeHead(200, {
-                    "Content-Type": "text/plain"
-                });
-                res.end("Successful buyerprofile");
-            }
-        });
-        db.release()
-    });
+    Buyer.findOneAndUpdate({ email: emailcookie }, { $set: { name: name, email: email, phone: phone } }, { new: true })
+        .then((doc) => {
+            console.log("Buyer profile update success", doc);
+            res.writeHead(200, {
+                "Content-Type": "text/plain"
+            });
+            res.end("Successfully updated status");
+        }).catch((e) => {
+            res.writeHead(400, {
+                "Content-Type": "text/plain"
+            });
+            res.end("Unsuccessfully updated Buyer profile");
+        })
 });
+
+
+
+// router.get("/ownerprofile", function (req, res) {
+//     console.log("Inside owner profile");
+//     var emailCookie = req.query.emailcookie;
+
+//     sql = `select name,email,phone,restaurantname,cuisine,profileimage,restaurantimage from owner where email="${emailCookie}";`;
+//     //sql="Select name,email from " + radio + " where password="' + password + '";
+//     console.log("SQL: " + sql);
+
+//     pool.getConnection(function (err, db) {
+//         if (err) {
+//             console.log("Error while getting connection")
+//         }
+//         db.query(sql, (err, result) => {
+//             if (err) {
+//                 console.log("Error occured : " + err);
+//                 res.writeHead(400, {
+//                     "Content-Type": "text/plain"
+//                 });
+//                 res.end("Unsuccessful buyerprofile post");
+//             } else {
+
+
+//                 Object.keys(result).forEach(function (key) {
+//                     var row = result[key];
+//                     resultObject = {
+//                         username: row.name,
+//                         email: row.email,
+//                         phone: row.phone,
+//                         restaurant: row.restaurantname,
+//                         cuisine: row.cuisine,
+//                         profileimage: row.profileimage,
+//                         restaurantimage: row.restaurantimage
+//                     }
+//                     // var name = row.name;
+//                     console.log("Name : " + row.name)
+//                 })
+
+//                 console.log("Result : ", JSON.stringify(resultObject));
+//                 console.log("Inside 200 response")
+//                 res.writeHead(200, {
+//                     "Content-Type": "text/plain"
+//                 });
+//                 res.end(JSON.stringify(resultObject));
+//             }
+//         });
+//         db.release()
+//     });
+
+// });
 
 
 router.get("/ownerprofile", function (req, res) {
     console.log("Inside owner profile");
-    var emailCookie = req.query.emailcookie;
+    var emailcookie = req.query.emailcookie;
 
-    sql = `select name,email,phone,restaurantname,cuisine,profileimage,restaurantimage from owner where email="${emailCookie}";`;
-    //sql="Select name,email from " + radio + " where password="' + password + '";
-    console.log("SQL: " + sql);
+    Owner.find({ email: emailcookie }).then((doc) => {
+        console.log("ownerprofile success!" + doc)
 
-    pool.getConnection(function (err, db) {
-        if (err) {
-            console.log("Error while getting connection")
-        }
-        db.query(sql, (err, result) => {
-            if (err) {
-                console.log("Error occured : " + err);
-                res.writeHead(400, {
-                    "Content-Type": "text/plain"
-                });
-                res.end("Unsuccessful buyerprofile post");
-            } else {
-
-
-                Object.keys(result).forEach(function (key) {
-                    var row = result[key];
-                    resultObject = {
-                        username: row.name,
-                        email: row.email,
-                        phone: row.phone,
-                        restaurant: row.restaurantname,
-                        cuisine: row.cuisine,
-                        profileimage: row.profileimage,
-                        restaurantimage: row.restaurantimage
-                    }
-                    // var name = row.name;
-                    console.log("Name : " + row.name)
-                })
-
-
-
-
-                console.log("Result : ", JSON.stringify(resultObject));
-                console.log("Inside 200 response")
-                res.writeHead(200, {
-                    "Content-Type": "text/plain"
-                });
-                res.end(JSON.stringify(resultObject));
+        Object.keys(doc).forEach(function (key) {
+            var row = doc[key];
+            resultObject = {
+                username: row.name,
+                email: row.email,
+                phone: row.phone,
+                restaurant: row.restaurantname,
+                cuisine: row.cuisine,
+                profileimage: row.profileimage,
+                restaurantimage: row.restaurantimage
             }
-        });
-        db.release()
-    });
+            // var name = row.name;
+            console.log("Name : " + row.name)
+        })
 
+        res.writeHead(200, {
+            "Content-Type": "text/plain"
+        });
+        res.end(JSON.stringify(resultObject));
+    }).catch((err) => {
+        console.log("ownerprofile fail! " + err)
+        res.writeHead(400, {
+            "Content-Type": "text/plain"
+        });
+        //console.log(JSON.stringify(resultObject))
+        res.end("ownerprofile fail");
+    })
 });
+
+
+// router.get("/buyerprofile", function (req, res) {
+//     console.log("Inside buyer profile");
+//     // var emailCookie = req.cookies.email;
+//     var emailCookie = req.query.emailcookie
+
+//     sql = `select name,email,phone,profileimage from buyer where email="${emailCookie}";`;
+//     //sql="Select name,email from " + radio + " where password="' + password + '";
+//     console.log("SQL: " + sql);
+
+//     pool.getConnection(function (err, db) {
+//         if (err) {
+//             console.log("Error while getting connection")
+//         }
+//         db.query(sql, (err, result) => {
+//             if (err) {
+//                 console.log("Error occured : " + err);
+//             } else {
+
+
+//                 Object.keys(result).forEach(function (key) {
+//                     var row = result[key];
+//                     resultObject = {
+//                         username: row.name,
+//                         email: row.email,
+//                         phone: row.phone,
+//                         profileimage: row.profileimage
+//                     }
+//                     // var name = row.name;
+//                     console.log("Name : " + row.name)
+//                 })
+
+
+
+
+//                 console.log("Result : ", JSON.stringify(resultObject));
+//                 console.log("Inside 200 response")
+//                 res.writeHead(200, {
+//                     "Content-Type": "text/plain"
+//                 });
+//                 res.end(JSON.stringify(resultObject));
+//             }
+//         });
+//         db.release()
+//     });
+
+
+// });
 
 
 router.get("/buyerprofile", function (req, res) {
     console.log("Inside buyer profile");
     // var emailCookie = req.cookies.email;
-    var emailCookie = req.query.emailcookie
+    var emailcookie = req.query.emailcookie
 
-    sql = `select name,email,phone,profileimage from buyer where email="${emailCookie}";`;
-    //sql="Select name,email from " + radio + " where password="' + password + '";
-    console.log("SQL: " + sql);
+    Buyer.find({ email: emailcookie }).then((doc) => {
+        console.log("buyerprofile success!" + doc)
 
-    pool.getConnection(function (err, db) {
-        if (err) {
-            console.log("Error while getting connection")
-        }
-        db.query(sql, (err, result) => {
-            if (err) {
-                console.log("Error occured : " + err);
-            } else {
-
-
-                Object.keys(result).forEach(function (key) {
-                    var row = result[key];
-                    resultObject = {
-                        username: row.name,
-                        email: row.email,
-                        phone: row.phone,
-                        profileimage: row.profileimage
-                    }
-                    // var name = row.name;
-                    console.log("Name : " + row.name)
-                })
-
-
-
-
-                console.log("Result : ", JSON.stringify(resultObject));
-                console.log("Inside 200 response")
-                res.writeHead(200, {
-                    "Content-Type": "text/plain"
-                });
-                res.end(JSON.stringify(resultObject));
+        Object.keys(doc).forEach(function (key) {
+            var row = doc[key];
+            resultObject = {
+                username: row.name,
+                email: row.email,
+                phone: row.phone,
+                profileimage: row.profileimage
             }
+            // var name = row.name;
+            console.log("Name : " + row.name)
+        })
+
+        res.writeHead(200, {
+            "Content-Type": "text/plain"
         });
-        db.release()
-    });
-
-
+        res.end(JSON.stringify(resultObject));
+    }).catch((err) => {
+        console.log("get buyerprofile! " + err)
+        res.writeHead(400, {
+            "Content-Type": "text/plain"
+        });
+        //console.log(JSON.stringify(resultObject))
+        res.end("get buyerprofile fail");
+    })
 });
 
+
+// router.post('/buyerprofileuploadimage', function (req, res) {
+//     upload(req, res, err => {
+//         if (err) {
+//             res.writeHead(400, {
+//                 'Content-Type': 'text/plain'
+//             })
+//             res.end('Issue with uploading')
+//         } else {
+//             console.log('Inside upload post call')
+//             console.log(req.file)
+
+//             emailCookie = req.body.emailcookie;
+//             filename = req.file.filename;
+
+//             console.log("Filename : " + req.file.filename)
+//             console.log(req.file)
+
+
+//             sql = `update buyer set profileimage='${filename}' where email='${emailCookie}'`;
+//             //sql="Select name,email from " + radio + " where password="' + password + '";
+//             console.log("SQL: " + sql);
+
+//             pool.getConnection(function (err, db) {
+//                 if (err) {
+//                     console.log("Error while getting connection")
+//                 }
+//                 db.query(sql, (err, result) => {
+//                     if (err) {
+//                         console.log("Error occured : " + err);
+//                     } else {
+//                         console.log("Image updated in database")
+//                     }
+//                 });
+//                 db.release()
+//             });
+
+//             res.writeHead(200, {
+//                 'Content-Type': 'text/plain'
+//             })
+//             res.end(JSON.stringify(req.file))
+//         }
+//     })
+// })
 
 router.post('/buyerprofileuploadimage', function (req, res) {
     upload(req, res, err => {
@@ -607,40 +775,72 @@ router.post('/buyerprofileuploadimage', function (req, res) {
             emailCookie = req.body.emailcookie;
             filename = req.file.filename;
 
-
-
             console.log("Filename : " + req.file.filename)
             console.log(req.file)
 
-
-            sql = `update buyer set profileimage='${filename}' where email='${emailCookie}'`;
-            //sql="Select name,email from " + radio + " where password="' + password + '";
-            console.log("SQL: " + sql);
-
-            pool.getConnection(function (err, db) {
-                if (err) {
-                    console.log("Error while getting connection")
-                }
-                db.query(sql, (err, result) => {
-                    if (err) {
-                        console.log("Error occured : " + err);
-                    } else {
-                        console.log("Image updated in database")
-                    }
-                });
-                db.release()
-            });
-
-
-
-
-            res.writeHead(200, {
-                'Content-Type': 'text/plain'
-            })
-            res.end(JSON.stringify(req.file))
+            Buyer.findOneAndUpdate({ email: emailCookie }, { $set: { profileimage: filename } }, { new: true })
+                .then((doc) => {
+                    console.log("Buyer profile upload image success", doc);
+                    res.writeHead(200, {
+                        "Content-Type": "text/plain"
+                    });
+                    res.end("Successfully updated status");
+                }).catch((e) => {
+                    res.writeHead(400, {
+                        "Content-Type": "text/plain"
+                    });
+                    res.end("Unsuccessfully uploaded Buyer profile");
+                })
         }
     })
 })
+
+
+
+// router.post('/ownerprofileuploadprofile', function (req, res) {
+//     upload(req, res, err => {
+//         if (err) {
+//             res.writeHead(400, {
+//                 'Content-Type': 'text/plain'
+//             })
+//             res.end('Issue with uploading')
+//         } else {
+//             console.log('Inside upload post call')
+//             console.log(req.file)
+
+//             emailCookie = req.body.emailcookie;
+//             filename = req.file.filename;
+
+
+
+//             console.log("Filename : " + req.file.filename)
+//             console.log(req.file)
+
+
+//             sql = `update owner set profileimage='${filename}' where email='${emailCookie}'`;
+//             //sql="Select name,email from " + radio + " where password="' + password + '";
+//             console.log("SQL: " + sql);
+
+//             pool.getConnection(function (err, db) {
+//                 if (err) {
+//                     console.log("Error while getting connection")
+//                 }
+//                 db.query(sql, (err, result) => {
+//                     if (err) {
+//                         console.log("Error occured : " + err);
+//                     } else {
+//                         console.log("Image updated in database")
+//                     }
+//                 });
+//                 db.release()
+//             });
+//             res.writeHead(200, {
+//                 'Content-Type': 'text/plain'
+//             })
+//             res.end(JSON.stringify(req.file))
+//         }
+//     })
+// })
 
 router.post('/ownerprofileuploadprofile', function (req, res) {
     upload(req, res, err => {
@@ -656,40 +856,68 @@ router.post('/ownerprofileuploadprofile', function (req, res) {
             emailCookie = req.body.emailcookie;
             filename = req.file.filename;
 
-
-
             console.log("Filename : " + req.file.filename)
             console.log(req.file)
 
-
-            sql = `update owner set profileimage='${filename}' where email='${emailCookie}'`;
-            //sql="Select name,email from " + radio + " where password="' + password + '";
-            console.log("SQL: " + sql);
-
-            pool.getConnection(function (err, db) {
-                if (err) {
-                    console.log("Error while getting connection")
-                }
-                db.query(sql, (err, result) => {
-                    if (err) {
-                        console.log("Error occured : " + err);
-                    } else {
-                        console.log("Image updated in database")
-                    }
-                });
-                db.release()
-            });
-
-
-
-            res.writeHead(200, {
-                'Content-Type': 'text/plain'
-            })
-            res.end(JSON.stringify(req.file))
+            Owner.findOneAndUpdate({ email: emailCookie }, { $set: { profileimage: filename } }, { new: true })
+                .then((doc) => {
+                    console.log("Owner profile upload image success", doc);
+                    res.writeHead(200, {
+                        "Content-Type": "text/plain"
+                    });
+                    res.end("Successfully updated status");
+                }).catch((e) => {
+                    res.writeHead(400, {
+                        "Content-Type": "text/plain"
+                    });
+                    res.end("Unsuccessfully uploaded Owner profile");
+                })
         }
     })
 })
 
+
+// router.post('/ownerprofileuploadrestaurant', function (req, res) {
+//     upload(req, res, err => {
+//         if (err) {
+//             res.writeHead(400, {
+//                 'Content-Type': 'text/plain'
+//             })
+//             res.end('Issue with uploading')
+//         } else {
+//             console.log('Inside upload post call')
+//             console.log(req.file)
+
+//             emailCookie = req.body.emailcookie;
+//             filename = req.file.filename;
+
+//             console.log("Filename : " + req.file.filename)
+//             console.log(req.file)
+
+//             sql = `update owner set restaurantimage='${filename}' where email='${emailCookie}'`;
+//             //sql="Select name,email from " + radio + " where password="' + password + '";
+//             console.log("SQL: " + sql);
+
+//             pool.getConnection(function (err, db) {
+//                 if (err) {
+//                     console.log("Error while getting connection")
+//                 }
+//                 db.query(sql, (err, result) => {
+//                     if (err) {
+//                         console.log("Error occured : " + err);
+//                     } else {
+//                         console.log("Image updated in database")
+//                     }
+//                 });
+//                 db.release()
+//             });
+//             res.writeHead(200, {
+//                 'Content-Type': 'text/plain'
+//             })
+//             res.end(JSON.stringify(req.file))
+//         }
+//     })
+// })
 
 router.post('/ownerprofileuploadrestaurant', function (req, res) {
     upload(req, res, err => {
@@ -705,38 +933,25 @@ router.post('/ownerprofileuploadrestaurant', function (req, res) {
             emailCookie = req.body.emailcookie;
             filename = req.file.filename;
 
-
-
             console.log("Filename : " + req.file.filename)
             console.log(req.file)
 
-
-            sql = `update owner set restaurantimage='${filename}' where email='${emailCookie}'`;
-            //sql="Select name,email from " + radio + " where password="' + password + '";
-            console.log("SQL: " + sql);
-
-            pool.getConnection(function (err, db) {
-                if (err) {
-                    console.log("Error while getting connection")
-                }
-                db.query(sql, (err, result) => {
-                    if (err) {
-                        console.log("Error occured : " + err);
-                    } else {
-                        console.log("Image updated in database")
-                    }
-                });
-                db.release()
-            });
-
-
-
-            res.writeHead(200, {
-                'Content-Type': 'text/plain'
-            })
-            res.end(JSON.stringify(req.file))
+            Owner.findOneAndUpdate({ email: emailCookie }, { $set: { restaurantimage: filename } }, { new: true })
+                .then((doc) => {
+                    console.log("Owner profile upload restaurant image success", doc);
+                    res.writeHead(200, {
+                        "Content-Type": "text/plain"
+                    });
+                    res.end("Successfully updated status");
+                }).catch((e) => {
+                    res.writeHead(400, {
+                        "Content-Type": "text/plain"
+                    });
+                    res.end("Unsuccessfully uploaded Owner restaurant");
+                })
         }
     })
 })
+
 
 module.exports = router;
