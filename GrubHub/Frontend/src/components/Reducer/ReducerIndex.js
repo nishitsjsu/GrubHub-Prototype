@@ -10,6 +10,10 @@ import OwnerProfileUpdateReducer from "./OwnerProfileUpdateReducer";
 import OwnerHomeReducer from "./OwnerHomeReducer";
 import OrderDetailsReducer from "./OrderDetailsReducer";
 import ChangeStatusReducer from "./ChangeStatusReducer";
+import OwnerSectionReducer from "./OwnerSectionReducer";
+import SectionDetailsReducer from "./SectionDetailsReducer";
+import DeleteSectionReducer from "./DeleteSectionReducer";
+import AddItemReducer from "./AddItemReducer";
 
 const rootReducer = combineReducers({
     LoginReducer: LoginReducer,
@@ -23,6 +27,10 @@ const rootReducer = combineReducers({
     OwnerHomeReducer: OwnerHomeReducer,
     OrderDetailsReducer: OrderDetailsReducer,
     ChangeStatusReducer: ChangeStatusReducer,
+    OwnerSectionReducer: OwnerSectionReducer,
+    SectionDetailsReducer: SectionDetailsReducer,
+    DeleteSectionReducer: DeleteSectionReducer,
+    AddItemReducer: AddItemReducer,
 })
 
 export default rootReducer

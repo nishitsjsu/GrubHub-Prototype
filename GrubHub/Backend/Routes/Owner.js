@@ -246,7 +246,7 @@ router.get("/sectiondetails", function (req, res) {
     console.log("Inside Section Details");
 
     Item.find({ owneremail: req.query.emailcookie, sectionname: req.query.sectionid }).then((doc) => {
-        console.log("success owner section details")
+        console.log("success owner section details" + doc)
         res.writeHead(200, {
             "Content-Type": "text/plain"
         });

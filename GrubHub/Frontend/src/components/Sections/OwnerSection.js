@@ -4,34 +4,57 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import { Link } from "react-router-dom";
 import { Redirect } from 'react-router';
+import { connect } from "react-redux";
+import ownersectionFetch_function from "../Action/OwnerSectionAction"
 import SectionData from "../Extra/SectionData"
 
 class OwnerSection extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            authFlag: false,
             sections: [],
             idcookie: cookie.load("id"),
             emailcookie: cookie.load("email")
         }
-
     }
+
+    componentWillReceiveProps(nextProps) {
+
+        console.log("in will recieve props for details", nextProps);
+        this.setState({
+            authFlag: nextProps.authFlag,
+            sections: nextProps.sections,
+        })
+    }
+
+    //Call the Will Mount to set the auth Flag to false
+    componentWillMount() {
+        this.setState({
+            authFlag: false
+        });
+    }
+
     //get the books data from backend  
     componentDidMount() {
-        axios.get('http://localhost:3001/ownersection', {
-            params: {
-                idcookie: this.state.idcookie,
-                emailcookie: this.state.emailcookie
-            }
-        })
-            .then((response) => {
-                console.log("Received response")
-                //update the state with the response data
-                this.setState({
 
-                    sections: this.state.sections.concat(response.data)
-                });
-            });
+        var emailcookie = this.state.emailcookie;
+
+        // axios.get('http://localhost:3001/ownersection', {
+        //     params: {
+        //         idcookie: this.state.idcookie,
+        //         emailcookie: this.state.emailcookie
+        //     }
+        // })
+        //     .then((response) => {
+        //         console.log("Received response")
+        //         //update the state with the response data
+        //         this.setState({
+
+        //             sections: this.state.sections.concat(response.data)
+        //         });
+        //     });
+        this.props.ownersectionFetch_function(emailcookie);
     }
 
 
@@ -88,4 +111,27 @@ class OwnerSection extends Component {
     }
 }
 //export Home Component
-export default OwnerSection;
+// export default OwnerSection;
+
+function mapStateToProps(state) {
+    console.log("in map state traveler_propfile", state);
+    return {
+        // authFlag: state.BuyerProfileReducer.authFlag,
+
+        sections: state.OwnerSectionReducer.sections,
+        authFlag: state.OwnerSectionReducer.authFlag,
+        //uploadFlag: state.BuyerProfileUploadReducer.uploadFlag,
+
+    };
+}
+
+const mapDispachToProps = dispatch => {
+    return {
+        ownersectionFetch_function: (emailcookie) => dispatch(ownersectionFetch_function(emailcookie)),
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispachToProps
+)(OwnerSection);

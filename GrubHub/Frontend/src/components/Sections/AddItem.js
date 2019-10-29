@@ -3,6 +3,8 @@ import "../Profile/op.css";
 import axios from "axios";
 import cookie from "react-cookies";
 import { Redirect } from "react-router";
+import { connect } from "react-redux";
+import addItem_function from "../Action/AddItemAction";
 // import { threadId } from "worker_threads";
 
 //Define a Login Component
@@ -31,6 +33,17 @@ class AddItem extends Component {
         this.priceChangeHandler = this.priceChangeHandler.bind(this);
         this.submitUpdate = this.submitUpdate.bind(this);
     }
+
+    componentWillReceiveProps(nextProps) {
+
+        console.log("in will recieve props for details", nextProps);
+        this.setState({
+
+            authFlag: nextProps.authFlag,
+
+        })
+    }
+
     //Call the Will Mount to set the auth Flag to false
     componentWillMount() {
         this.setState({
@@ -73,22 +86,24 @@ class AddItem extends Component {
 
         };
         //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post("http://localhost:3001/additem", data).then(response => {
-            console.log("Status Code : ", response.status);
-            if (response.status === 200) {
-                console.log("Item added successfully")
-                this.setState({
-                    authFlag: true
-                });
-                window.location.replace(`/sectiondetails/${this.state.sectionid}`)
-            } else {
-                this.setState({
-                    authFlag: false
-                });
-            }
-        });
+        // axios.defaults.withCredentials = true;
+        // //make a post request with the user data
+        // axios.post("http://localhost:3001/additem", data).then(response => {
+        //     console.log("Status Code : ", response.status);
+        //     if (response.status === 200) {
+        //         console.log("Item added successfully")
+        //         this.setState({
+        //             authFlag: true
+        //         });
+        //         window.location.replace(`/sectiondetails/${this.state.sectionid}`)
+        //     } else {
+        //         this.setState({
+        //             authFlag: false
+        //         });
+        //     }
+        // });
+
+        this.props.addItem_function(data);
     };
 
 
@@ -153,13 +168,14 @@ class AddItem extends Component {
     render() {
         //redirect based on successful login
         let redirectVar = null;
-        if (cookie.load("cookie")) {
-            redirectVar = <Redirect to="/home" />;
+        let u = "/sectiondetails/" + this.state.sectionid;
+        if (this.state.authFlag) {
+            redirectVar = <Redirect to={`/sectiondetails/${this.state.sectionid}`} />;
         }
         return (
             <div>
-                {/* {redirectVar} */}
-                <div class="row">
+                {redirectVar}
+                < div class="row" >
                     <div className="profile-img">
 
                         <div class="col-md-10.5">
@@ -172,7 +188,7 @@ class AddItem extends Component {
                             />
                         </div>
                     </div>
-                </div>
+                </div >
 
 
                 <br></br>
@@ -224,4 +240,24 @@ class AddItem extends Component {
     }
 }
 //export Login Component
-export default AddItem;
+// export default AddItem;
+
+function mapStateToProps(state) {
+    console.log("in map state traveler_propfile", state);
+    return {
+        authFlag: state.AddItemReducer.authFlag,
+    };
+}
+
+const mapDispachToProps = dispatch => {
+    return {
+        addItem_function: (data) => dispatch(addItem_function(data)),
+
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispachToProps
+)(AddItem);
+
