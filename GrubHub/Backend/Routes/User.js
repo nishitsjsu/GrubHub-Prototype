@@ -9,8 +9,12 @@ var storage = require('../Image/UploadImage').storage;
 var Buyer = require("../Models/buyer");
 var Owner = require("../Models/owner");
 const mongoose = require("mongoose")
-
+const jwt = require("jsonwebtoken");
+const passport = require("passport");
+require('../config/passport')(passport)
+// require("../config/passport")
 app.use(express.static('public'))
+app.use(passport.initialize());
 
 var resultObject;
 
@@ -134,6 +138,33 @@ router.post("/login", function (req, res) {
                     console.log("HAsh " + name + id + hash)
 
                     if (bcrypt.compareSync(password, hash)) {
+
+                        const payload = {
+                            name: name,
+                            id: id,
+                            email: email,
+                            radio: radio
+                        };
+
+                        console.log("PAyload " + payload.email)
+
+                        jwt.sign(
+                            payload,
+                            "CMPE_273_Grubhub_secret",
+                            { expiresIn: 3600 },
+                            (err, token) => {
+                                if (err) {
+                                    console.log("Error in jwt token" + err)
+                                } else {
+                                    console.log("Token " + token)
+                                    res.json({
+                                        success: true,
+                                        token: "Bearer " + token
+                                    });
+                                }
+                            }
+                        );
+
                         res.cookie("email", email, {
                             maxAge: 900000,
                             httpOnly: false,
@@ -156,10 +187,10 @@ router.post("/login", function (req, res) {
                         });
                         req.session.user = email;
 
-                        res.writeHead(200, {
-                            "Content-Type": "text/plain"
-                        });
-                        res.end("Successful Login");
+                        // res.writeHead(200, {
+                        //     "Content-Type": "text/plain"
+                        // });
+                        // res.end("Successful Login");
                     } else {
                         console.log(" Invalid credentials found ");
                         res.writeHead(400, {
@@ -171,6 +202,7 @@ router.post("/login", function (req, res) {
             }
 
         }).catch(err => {
+            console.log(err)
             res.writeHead(400, {
                 "Content-Type": "text/plain"
             });
@@ -682,7 +714,7 @@ router.get("/ownerprofile", function (req, res) {
 // });
 
 
-router.get("/buyerprofile", function (req, res) {
+router.get("/buyerprofile", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside buyer profile");
     // var emailCookie = req.cookies.email;
     var emailcookie = req.query.emailcookie
@@ -952,6 +984,17 @@ router.post('/ownerprofileuploadrestaurant', function (req, res) {
         }
     })
 })
+
+router.get("/current", passport.authenticate("jwt", { session: false }), (req, res) => {
+    console.log("Inside current functions@")
+    res.json({
+        msg: "Passport successful"
+        // email: req.body.username,
+        // password: req.body.password,
+        // radio: req.body.radio
+    });
+}
+);
 
 
 module.exports = router;

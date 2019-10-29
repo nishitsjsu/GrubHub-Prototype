@@ -8,12 +8,17 @@ var cors = require("cors");
 var multer = require("multer");
 var path = require("path");
 var mysql = require("mysql");
+var passport = require("passport");
 app.set("view engine", "ejs");
 const bcrypt = require('bcrypt');
 require("./mongoose");
 
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(passport.initialize());
+
+
+
 
 //use express session to maintain session data
 app.use(
@@ -31,6 +36,7 @@ app.use(cookieParser());
 //     extended: true
 //   }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //Allow Access Control
 app.use(function (req, res, next) {
@@ -52,6 +58,7 @@ const user = require('./Routes/User')
 const owner = require('./Routes/Owner')
 const buyer = require('./Routes/Buyer')
 app.use(user)
+// app.use("/User", user)
 app.use(owner)
 app.use(buyer)
 

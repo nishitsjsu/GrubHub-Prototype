@@ -1,33 +1,29 @@
 import axios from 'axios';
-import setAuthorizationToken from '../../utils/setAuthorizationToken'
-// import jwt from 'jsonwebtoken';
 import rootURL from '../config';
-export const SUCCESS_BUYER_DATA_FETCH = "succes_buyer_data_fetch";
-export const FAILURE_BUYER_DATA_FETCH = "failure_buyer_data_fetch";
+export const SUCCESS_OWNER_HOME_FETCH = "succes_owner_home_fetch";
+export const FAILURE_OWNER_HOME_FETCH = "failure_owner_home_fetch";
 
 //traveler login action
 function getSuccess(response) {
     return {
-        type: SUCCESS_BUYER_DATA_FETCH,
+        type: SUCCESS_OWNER_HOME_FETCH,
         payload: response
     }
 }
 function getError(response) {
     return {
-        type: FAILURE_BUYER_DATA_FETCH,
+        type: FAILURE_OWNER_HOME_FETCH,
         payload: response
     }
 }
-function dataFetch_function(emailcookie) {
+function ownerhomeFetch_function(emailcookie) {
     console.log("Data in data fecth function ")
-    console.log("token from localstoage " + localStorage.getItem("jwt"))
-    setAuthorizationToken(localStorage.getItem('jwt'));
-
     return function (dispatch) {
         console.log("action data is");
         axios.defaults.withCredentials = true;
-        axios.get(rootURL + '/buyerprofile', {
+        axios.get(rootURL + '/ownerhome', {
             params: {
+
                 emailcookie: emailcookie
             }
         }).then(response => {
@@ -39,4 +35,4 @@ function dataFetch_function(emailcookie) {
         })
     }
 }
-export default dataFetch_function;
+export default ownerhomeFetch_function;

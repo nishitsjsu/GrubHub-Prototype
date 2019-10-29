@@ -4,34 +4,59 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import { Link } from "react-router-dom";
 import { Redirect } from 'react-router';
+import { connect } from "react-redux";
+import ownerhomeFetch_function from "../Action/OwnerHomeAction"
 import OrderData from "../Extra/OrderData"
 
-class Home extends Component {
+class OwnerHome extends Component {
     constructor(props) {
         super(props);
         this.state = {
+
             books: [],
             idcookie: cookie.load("id"),
             emailcookie: cookie.load("email"),
+            authFlag: false,
         }
         this.viewButton = this.viewButton.bind(this);
     }
+
+
+    componentWillReceiveProps(nextProps) {
+
+        console.log("in will recieve props for details", nextProps);
+        this.setState({
+            authFlag: nextProps.authFlag,
+            books: nextProps.books,
+        })
+    }
+
+    //Call the Will Mount to set the auth Flag to false
+    componentWillMount() {
+        this.setState({
+            authFlag: false
+        });
+    }
+
+
     //get the books data from backend  
     componentDidMount() {
-        axios.get('http://localhost:3001/ownerhome', {
-            params: {
-                idcookie: this.state.idcookie,
-                emailcookie: this.state.emailcookie
-            }
-        })
-            .then((response) => {
-                console.log("Received response")
-                //update the state with the response data
-                this.setState({
+        var emailcookie = this.state.emailcookie;
+        // axios.get('http://localhost:3001/ownerhome', {
+        //     params: {
+        //         idcookie: this.state.idcookie,
+        //         emailcookie: this.state.emailcookie
+        //     }
+        // })
+        //     .then((response) => {
+        //         console.log("Received response")
+        //         //update the state with the response data
+        //         this.setState({
 
-                    books: this.state.books.concat(response.data)
-                });
-            });
+        //             books: this.state.books.concat(response.data)
+        //         });
+        //     });
+        this.props.ownerhomeFetch_function(emailcookie);
     }
 
     viewButton = (index) => {
@@ -103,4 +128,27 @@ class Home extends Component {
     }
 }
 //export Home Component
-export default Home;
+// export default Home;
+
+function mapStateToProps(state) {
+    console.log("in map state traveler_propfile", state);
+    return {
+        // authFlag: state.BuyerProfileReducer.authFlag,
+
+        books: state.OwnerHomeReducer.books,
+        authFlag: state.OwnerHomeReducer.authFlag,
+        //uploadFlag: state.BuyerProfileUploadReducer.uploadFlag,
+
+    };
+}
+
+const mapDispachToProps = dispatch => {
+    return {
+        ownerhomeFetch_function: (emailcookie) => dispatch(ownerhomeFetch_function(emailcookie)),
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispachToProps
+)(OwnerHome);

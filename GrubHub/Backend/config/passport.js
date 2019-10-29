@@ -1,3 +1,4 @@
+var passport = require("passport");
 var JwtStrategy = require('passport-jwt').Strategy;
 var ExtractJwt = require('passport-jwt').ExtractJwt;
 var buyer = require('../Models/buyer');
@@ -9,9 +10,10 @@ module.exports = function (passport) {
     opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
     opts.secretOrKey = "CMPE_273_Grubhub_secret";
     passport.use(new JwtStrategy(opts, function (jwt_payload, done) {
-        console.log("JWT", jwt_payload);
-        buyer.findOne({ emailaddress: jwt_payload.emailaddress, UserType: jwt_payload.UserType }, function (err, user) {
+        console.log("JWT payload received", jwt_payload);
+        buyer.findOne({ email: jwt_payload.email }, function (err, user) {
             if (err) {
+                console.log("Error in passport" + err)
                 return done(err, false);
             }
             if (user) {

@@ -2,6 +2,13 @@ const LoginReducer = (state = {}, action) => {
     let newState = { ...state };
     if (action.type === "succes_login") {
         console.log("in reducer", action.payload.status);
+        console.log("Inside reducer Token" + action.payload.data.token)
+
+        if (action.payload.data.token) {
+            console.log("Token received!")
+            console.log("Inside reducer Token" + action.payload.data.token)
+            window.localStorage.setItem("jwt", action.payload.data.token)
+        }
         newState.authFlag = true;
         console.log("login status in success", newState);
     } else if (action.type === "failure_login") {

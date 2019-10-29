@@ -4,6 +4,9 @@ import axios from 'axios';
 import cookie from 'react-cookie';
 import { Link } from "react-router-dom";
 import { Redirect } from 'react-router';
+import { connect } from "react-redux";
+import orderdetailsFetch_function from "../Action/OrderDetailsAction"
+import changeStatus_function from "../Action/ChangeStatusAction"
 import OrderData from "../Extra/OrderData"
 
 class OrderDetails extends Component {
@@ -12,27 +15,51 @@ class OrderDetails extends Component {
         this.state = {
             items: [],
             status: "",
-            authFlag: false
+            authFlag: false,
+            authFlagCh: false,
         }
 
 
         this.changeStatus = this.changeStatus.bind(this);
         this.handleDropdown = this.handleDropdown.bind(this);
     }
+
+    componentWillReceiveProps(nextProps) {
+
+        console.log("in will recieve props for details", nextProps);
+        this.setState({
+            authFlag: nextProps.authFlag,
+            items: nextProps.items,
+            authFlagCh: nextProps.authFlagCh
+        })
+    }
+
+    //Call the Will Mount to set the auth Flag to false
+    componentWillMount() {
+        this.setState({
+            authFlag: false,
+            authFlagCh: false
+        });
+    }
+
+
     //get the books data from backend  
     componentDidMount() {
-        axios.get('http://localhost:3001/orderitemdetails', {
-            params: {
-                orderid: this.props.match.params.bookid
-            }
-        })
-            .then((response) => {
-                console.log("Received response")
-                //update the state with the response data
-                this.setState({
-                    items: this.state.items.concat(response.data)
-                });
-            });
+        var orderid = this.props.match.params.bookid;
+        this.props.orderdetailsFetch_function(orderid);
+
+        // axios.get('http://localhost:3001/orderitemdetails', {
+        //     params: {
+        //         orderid: this.props.match.params.bookid
+        //     }
+        // })
+        //     .then((response) => {
+        //         console.log("Received response")
+        //         //update the state with the response data
+        //         this.setState({
+        //             items: this.state.items.concat(response.data)
+        //         });
+        //     });
     }
 
     handleDropdown = e => {
@@ -48,24 +75,25 @@ class OrderDetails extends Component {
             orderid: this.props.match.params.bookid,
             status: this.state.status
         };
+        this.props.changeStatus_function(data)
         //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post("http://localhost:3001/changestatus", data).then(response => {
-            console.log("Status Code : ", response.status);
-            if (response.status === 200) {
-                console.log("status changed!")
-                window.location.replace("/ownerhome");
-                this.setState({
-                    authFlag: true
-                })
+        // axios.defaults.withCredentials = true;
+        // //make a post request with the user data
+        // axios.post("http://localhost:3001/changestatus", data).then(response => {
+        //     console.log("Status Code : ", response.status);
+        //     if (response.status === 200) {
+        //         console.log("status changed!")
+        //         window.location.replace("/ownerhome");
+        //         this.setState({
+        //             authFlag: true
+        //         })
 
-            } else {
-                this.setState({
-                    authFlag: false
-                });
-            }
-        });
+        //     } else {
+        //         this.setState({
+        //             authFlag: false
+        //         });
+        //     }
+        // });
     };
 
 
@@ -74,6 +102,7 @@ class OrderDetails extends Component {
 
     render() {
         console.log("params " + this.props.match.params)
+        console.log("items " + this.state.items)
         //iterate over books to create a table row
         let details = this.state.items.map(item => {
             return (
@@ -86,13 +115,13 @@ class OrderDetails extends Component {
             )
         })
         //if not logged in go to login page
-        // let redirectVar = null;
-        // if (!cookie.load('cookie')) {
-        //     redirectVar = <Redirect to="/login" />
-        // }
+        let redirectVar = null;
+        if (this.state.authFlagCh) {
+            redirectVar = <Redirect to="/ownerhome" />
+        }
         return (
             <div>
-                {/* {redirectVar} */}
+                {redirectVar}
                 <div class="container">
                     <h2>Details of the order</h2>
                     <table class="table table-bordered table-hover" style={{ textAlign: "left", backgroundColor: "#fafafa" }}>
@@ -132,4 +161,32 @@ class OrderDetails extends Component {
     }
 }
 //export Home Component
-export default OrderDetails;
+// export default OrderDetails;
+
+function mapStateToProps(state) {
+    console.log("in map state traveler_propfile", state);
+    return {
+        // authFlag: state.BuyerProfileReducer.authFlag,
+        // username: state.BuyerProfileReducer.username,
+        // email: state.BuyerProfileReducer.email,
+        // phone: state.BuyerProfileReducer.phone,
+        items: state.OrderDetailsReducer.items,
+        authFlag: state.OrderDetailsReducer.authFlag,
+        authFlagCh: state.ChangeStatusReducer.authFlagCh,
+
+    };
+}
+
+const mapDispachToProps = dispatch => {
+    return {
+        orderdetailsFetch_function: (orderid) => dispatch(orderdetailsFetch_function(orderid)),
+        changeStatus_function: (data) => dispatch(changeStatus_function(data)),
+        // imageUpload_function: (data, config) => dispatch(imageUpload_function(data, config))
+
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispachToProps
+)(OrderDetails);
