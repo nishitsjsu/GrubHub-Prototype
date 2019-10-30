@@ -10,32 +10,12 @@ class SectionData extends Component {
         // this.state = {
         //     books: this.props.books
         // }
-        this.viewButton = this.viewButton.bind(this);
     }
-
-
 
     state = {};
 
-    viewButton = e => {
-        console.log("Button clicked");
-        // <Link to={`./orderdetails:bookid=${this.props.data.BookID}`} component={OrderDetails}></Redirect >
-    }
-
-
-
-
     render() {
         console.log(this.props.data);
-        //let book = this.props.books.BookID
-
-        // let details = this.state.books.map((book) => {
-        //     return (
-        //         <div>
-
-        //         </div>
-        //     )
-        // })
 
         return (
             <Fragment>

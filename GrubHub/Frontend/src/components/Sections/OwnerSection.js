@@ -7,6 +7,7 @@ import { Redirect } from 'react-router';
 import { connect } from "react-redux";
 import ownersectionFetch_function from "../Action/OwnerSectionAction"
 import SectionData from "../Extra/SectionData"
+import Pagination from "../Pagination"
 
 class OwnerSection extends Component {
     constructor(props) {
@@ -15,7 +16,9 @@ class OwnerSection extends Component {
             authFlag: false,
             sections: [],
             idcookie: cookie.load("id"),
-            emailcookie: cookie.load("email")
+            emailcookie: cookie.load("email"),
+            currenPage: 1,
+            sectionsPerPage: 1,
         }
     }
 
@@ -57,24 +60,30 @@ class OwnerSection extends Component {
         this.props.ownersectionFetch_function(emailcookie);
     }
 
-
-
     render() {
+
+        const indexOfLastSection = this.state.currenPage * this.state.sectionsPerPage;
+        const indexOfFirstSection = indexOfLastSection - this.state.sectionsPerPage;
+        const currenSections = this.state.sections.slice(indexOfFirstSection, indexOfLastSection);
+
+        const paginate = (pageNumber) => {
+            this.setState({
+                currenPage: pageNumber
+            })
+        }
+
         //iterate over books to create a table row
-        let details = this.state.sections.map(section => {
+        let details = currenSections.map(section => {
+            // let details = this.state.sections.map(section => {
             return (
                 <tr>
                     <SectionData key={Math.random} data={section}></SectionData>
                 </tr>
-                // <tr key="index">
-                //     <td>{book.BookID}</td>
-                //     <td>{book.Title}</td>
-                //     <td>{book.Author}</td>
-                //     <td>{book.Status}</td>
-                //     <input type="button" onClick={this.viewButton(index)} value="view details"></input>
-                // </tr>
+
             )
         })
+
+
         //if not logged in go to login page
         let redirectVar = null;
         // if (!cookie.load('cookie')) {
@@ -103,7 +112,9 @@ class OwnerSection extends Component {
                         </tbody>
                     </table>
                     <Link to="/addsection"><button className="btn btn-primary" onClick={this.addSection}>Add Section</button></Link>
+                    <Pagination postsPerPage={this.state.sectionsPerPage} totalPosts={this.state.sections.length} paginate={paginate} />
                 </div>
+
 
             </div>
 
