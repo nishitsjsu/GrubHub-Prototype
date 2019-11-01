@@ -8,6 +8,7 @@ var Section = require("../Models/section")
 var Item = require("../Models/items")
 var Order = require("../Models/orders")
 var Orderdetails = require("../Models/orderdetails")
+var Ownermessage = require("../Models/message")
 const mongoose = require("mongoose")
 
 // router.get("/ownerhome", function (req, res) {
@@ -663,6 +664,60 @@ router.get("/owneroldorders", function (req, res) {
         //console.log(JSON.stringify(resultObject))
         res.end("owneroldorders fail");
     })
+});
+
+//----------new functionality
+
+router.post("/ownermessage", function (req, res) {
+    console.log("Inside Add Section Request");
+    console.log("Req Body : ", req.body);
+    var message = req.body.message;
+    var owneremail = req.body.owneremail;
+    var buyeremail = req.body.buyeremail;
+    var restaurant = req.body.restaurant;
+    var orderid = req.body.orderid;
+
+    const ownermessage = new Ownermessage({
+        _id: new mongoose.Types.ObjectId(),
+        message: message,
+        sender: owneremail,
+        receiver: buyeremail,
+        restaurant: restaurant,
+        orderid: orderid,
+    })
+    console.log("object creatd " + ownermessage)
+    ownermessage.save().then(result => {
+        console.log("Message saved successfully " + result);
+        res.writeHead(200, {
+            "Content-Type": "text/plain"
+        });
+        res.end("Message saved successfully");
+    }).catch(error => {
+        console.log("error occured" + error);
+        res.writeHead(400, {
+            "Content-Type": "text/plain"
+        });
+        res.end("Message saved unsuccessfully");
+    });
+});
+
+router.get("/ownerviewmessage", function (req, res) {
+    console.log("Inside buyerviewmessage ");
+    emailcookie = req.query.emailcookie;
+    Ownermessage.find({ receiver: emailcookie }).then((doc) => {
+        console.log("buyerviewmessage success" + doc)
+        res.writeHead(200, {
+            "Content-Type": "text/plain"
+        });
+        res.end(JSON.stringify(doc));
+    }).catch((err) => {
+        console.log(err);
+        console.log("Inside 400 response")
+        res.writeHead(400, {
+            "Content-Type": "text/plain"
+        });
+        res.end("Error in buyerviewmessage");
+    });
 });
 
 

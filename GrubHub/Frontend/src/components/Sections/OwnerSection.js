@@ -18,7 +18,7 @@ class OwnerSection extends Component {
             idcookie: cookie.load("id"),
             emailcookie: cookie.load("email"),
             currenPage: 1,
-            sectionsPerPage: 1,
+            sectionsPerPage: 2,
         }
     }
 

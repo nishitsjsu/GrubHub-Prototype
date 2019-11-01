@@ -64,6 +64,9 @@ class Navbar extends Component {
             <li>
               <Link to="/buyerfutureorders">Upcoming Orders</Link>
             </li>
+            <li>
+              <Link to="/buyerviewmessage">View Messages</Link>
+            </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li>
@@ -98,6 +101,9 @@ class Navbar extends Component {
             </li>
             <li>
               <Link to="/ownersection">Sections</Link>
+            </li>
+            <li>
+              <Link to="/ownerviewmessage">View Messages</Link>
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">

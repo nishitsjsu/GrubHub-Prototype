@@ -4,34 +4,59 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import { Link } from "react-router-dom";
 import { Redirect } from 'react-router';
+import { connect } from "react-redux";
+import buyermessageFetch_function from "../Action/BuyerViewMessageAction"
 import OrderData from "../Extra/OrderData"
 
-class BuyerFutureOrders extends Component {
+class BuyerViewMessage extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            authFlag: false,
             orders: [],
-            idcookie: cookie.load("id"),
             emailcookie: cookie.load("email"),
         }
-
     }
+
+    componentWillReceiveProps(nextProps) {
+
+        console.log("in will recieve props for details", nextProps);
+        this.setState({
+            authFlag: nextProps.authFlag,
+            orders: nextProps.orders,
+        })
+    }
+
+    //Call the Will Mount to set the auth Flag to false
+    componentWillMount() {
+        this.setState({
+            authFlag: false
+        });
+    }
+
+
+
+
     //get the orders data from backend  
     componentDidMount() {
-        axios.get('http://localhost:3001/buyerfutureorders', {
-            params: {
-                idcookie: this.state.idcookie,
-                emailcookie: this.state.emailcookie,
-            }
-        })
-            .then((response) => {
-                console.log("Received response")
-                //update the state with the response data
-                this.setState({
+        var emailcookie = this.state.emailcookie;
 
-                    orders: this.state.orders.concat(response.data)
-                });
-            });
+        // axios.get('http://localhost:3001/buyerfutureorders', {
+        //     params: {
+        //         idcookie: this.state.idcookie,
+        //         emailcookie: this.state.emailcookie,
+        //     }
+        // })
+        //     .then((response) => {
+        //         console.log("Received response")
+        //         //update the state with the response data
+        //         this.setState({
+
+        //             orders: this.state.orders.concat(response.data)
+        //         });
+        //     });
+
+        this.props.buyermessageFetch_function(emailcookie);
     }
 
 
@@ -46,8 +71,7 @@ class BuyerFutureOrders extends Component {
                 <tr key="index">
                     <td>{order._id}</td>
                     <td>{order.restaurant}</td>
-                    <td>{order.status}</td>
-                    <td><td><Link to={`/buyermessage/${order.owneremail}/${order.restaurant}/${order._id}`} ><button className="btn btn-primary">Message Restaurant</button></Link></td></td>
+                    <td>{order.message}</td>
                 </tr>
             )
         })
@@ -60,14 +84,13 @@ class BuyerFutureOrders extends Component {
             <div>
                 {/* {redirectVar} */}
                 <div class="container">
-                    <h2>List of All Future Orders</h2>
+                    <h2>List of All Messages</h2>
                     <table class="table table-bordered table-hover" style={{ textAlign: "left", backgroundColor: "#fafafa" }}>
                         <thead class="thead-dark" style={{ textAlign: "center" }}>
                             <tr>
                                 <th>Order ID</th>
                                 <th>Restaurant</th>
-                                <th>Status</th>
-                                <th>Messages</th>
+                                <th>Message</th>
 
                             </tr>
                         </thead>
@@ -84,4 +107,25 @@ class BuyerFutureOrders extends Component {
     }
 }
 //export Home Component
-export default BuyerFutureOrders;
+// export default BuyerViewMessage;
+
+function mapStateToProps(state) {
+    console.log("in map state traveler_propfile", state);
+    return {
+
+        orders: state.BuyerMessageViewReducer.orders,
+        authFlag: state.BuyerMessageViewReducer.authFlag,
+
+    };
+}
+
+const mapDispachToProps = dispatch => {
+    return {
+        buyermessageFetch_function: (emailcookie) => dispatch(buyermessageFetch_function(emailcookie)),
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispachToProps
+)(BuyerViewMessage);

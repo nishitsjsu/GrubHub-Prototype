@@ -113,6 +113,7 @@ class OwnerHome extends Component {
                                 <th>Person Address</th>
                                 <th>Order Status</th>
                                 <th>Action</th>
+                                <th>Message</th>
                             </tr>
                         </thead>
                         <tbody>

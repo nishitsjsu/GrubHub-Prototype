@@ -24,6 +24,10 @@ import BuyerPastOrders from "./Orders/BuyerPastOrders";
 import BuyerFutureOrders from "./Orders/BuyerFutureOrders";
 import OwnerOldOrders from "./Orders/OwnerOldOrders";
 import AddSection from "./Sections/AddSection";
+import OwnerMessage from "./Message/OwnerMessage";
+import BuyerViewMessage from "./Message/BuyerViewMessage";
+import OwnerViewMessage from "./Message/OwnerViewMessage";
+import BuyerMessage from "./Message/BuyerMessage";
 
 
 //Create a Main Component
@@ -56,7 +60,10 @@ class Main extends Component {
         <Route path="/buyerfutureorders" component={BuyerFutureOrders} />
         <Route path="/owneroldorders" component={OwnerOldOrders} />
         <Route path="/addsection" component={AddSection} />
-
+        <Route path="/ownermessage/:buyeremail/:buyername/:owneremail/:restaurant/:orderid" component={OwnerMessage} />
+        <Route path="/buyerviewmessage" component={BuyerViewMessage} />
+        <Route path="/ownerviewmessage" component={OwnerViewMessage} />
+        <Route path="/buyermessage/:owneremail/:restaurant/:orderid" component={BuyerMessage} />
 
       </div>
     );

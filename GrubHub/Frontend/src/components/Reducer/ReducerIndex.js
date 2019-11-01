@@ -14,6 +14,10 @@ import OwnerSectionReducer from "./OwnerSectionReducer";
 import SectionDetailsReducer from "./SectionDetailsReducer";
 import DeleteSectionReducer from "./DeleteSectionReducer";
 import AddItemReducer from "./AddItemReducer";
+import OwnerMessageReducer from "./OwnerMessageReducer";
+import BuyerMessageViewReducer from "./BuyerMessageViewReducer";
+import BuyerMessageReducer from "./BuyerMessageReducer";
+import OwnerMessageViewReducer from "./OwnerMessageViewReducer";
 
 const rootReducer = combineReducers({
     LoginReducer: LoginReducer,
@@ -31,6 +35,10 @@ const rootReducer = combineReducers({
     SectionDetailsReducer: SectionDetailsReducer,
     DeleteSectionReducer: DeleteSectionReducer,
     AddItemReducer: AddItemReducer,
+    OwnerMessageReducer: OwnerMessageReducer,
+    BuyerMessageViewReducer: BuyerMessageViewReducer,
+    BuyerMessageReducer: BuyerMessageReducer,
+    OwnerMessageViewReducer: OwnerMessageViewReducer,
 })
 
 export default rootReducer

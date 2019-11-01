@@ -10,6 +10,7 @@ var Owner = require("../Models/owner")
 var Cart = require("../Models/cart")
 var Order = require("../Models/orders")
 var Orderdetails = require("../Models/orderdetails")
+var Message = require("../Models/message")
 const mongoose = require("mongoose")
 
 
@@ -705,5 +706,63 @@ router.get("/buyerfutureorders", function (req, res) {
         res.end("Error in buyerfutureorders");
     });
 });
+
+
+//-------new functionality
+
+router.get("/buyerviewmessage", function (req, res) {
+    console.log("Inside buyerviewmessage ");
+    emailcookie = req.query.emailcookie;
+    Message.find({ receiver: emailcookie }).then((doc) => {
+        console.log("buyerviewmessage success" + doc)
+        res.writeHead(200, {
+            "Content-Type": "text/plain"
+        });
+        res.end(JSON.stringify(doc));
+    }).catch((err) => {
+        console.log(err);
+        console.log("Inside 400 response")
+        res.writeHead(400, {
+            "Content-Type": "text/plain"
+        });
+        res.end("Error in buyerviewmessage");
+    });
+});
+
+
+router.post("/buyermessage", function (req, res) {
+    console.log("Inside Add Section Request");
+    console.log("Req Body : ", req.body);
+    var message = req.body.message;
+    var owneremail = req.body.owneremail;
+    var buyeremail = req.body.buyeremail;
+    var restaurant = req.body.restaurant;
+    var orderid = req.body.orderid;
+
+    const buyermessage = new Message({
+        _id: new mongoose.Types.ObjectId(),
+        message: message,
+        sender: buyeremail,
+        receiver: owneremail,
+        restaurant: "",
+        orderid: orderid,
+    })
+    console.log("object creatd " + buyermessage)
+    buyermessage.save().then(result => {
+        console.log("Message saved successfully " + result);
+        res.writeHead(200, {
+            "Content-Type": "text/plain"
+        });
+        res.end("Message saved successfully");
+    }).catch(error => {
+        console.log("error occured" + error);
+        res.writeHead(400, {
+            "Content-Type": "text/plain"
+        });
+        res.end("Message saved unsuccessfully");
+    });
+});
+
+
 
 module.exports = router;
