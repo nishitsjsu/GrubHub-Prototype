@@ -18,6 +18,7 @@ import OwnerMessageReducer from "./OwnerMessageReducer";
 import BuyerMessageViewReducer from "./BuyerMessageViewReducer";
 import BuyerMessageReducer from "./BuyerMessageReducer";
 import OwnerMessageViewReducer from "./OwnerMessageViewReducer";
+import OwnerOldOrdersReducer from "./OwnerOldOrdersReducer";
 
 const rootReducer = combineReducers({
     LoginReducer: LoginReducer,
@@ -39,6 +40,7 @@ const rootReducer = combineReducers({
     BuyerMessageViewReducer: BuyerMessageViewReducer,
     BuyerMessageReducer: BuyerMessageReducer,
     OwnerMessageViewReducer: OwnerMessageViewReducer,
+    OwnerOldOrdersReducer: OwnerOldOrdersReducer,
 })
 
 export default rootReducer
