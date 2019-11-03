@@ -8,6 +8,9 @@ const LoginReducer = (state = {}, action) => {
             console.log("Token received!")
             console.log("Inside reducer Token" + action.payload.data.token)
             window.localStorage.setItem("jwt", action.payload.data.token)
+            window.localStorage.setItem("success", action.payload.data.success)
+            window.localStorage.setItem("email", action.payload.data.email)
+            window.localStorage.setItem("radio", action.payload.data.radio)
         }
         newState.authFlag = true;
         console.log("login status in success", newState);

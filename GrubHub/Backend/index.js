@@ -12,6 +12,7 @@ var passport = require("passport");
 app.set("view engine", "ejs");
 const bcrypt = require('bcrypt');
 require("./mongoose");
+var kafka = require('./kafka/client');
 
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));

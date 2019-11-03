@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var buyer = new mongoose.Schema({
-    _id: mongoose.Types.ObjectId,
+    // _id: mongoose.Types.ObjectId,
     email: String,
     password: String,
     name: String,

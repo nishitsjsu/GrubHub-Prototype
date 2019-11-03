@@ -15,6 +15,7 @@ require('../config/passport')(passport)
 // require("../config/passport")
 app.use(express.static('public'))
 app.use(passport.initialize());
+var kafka = require('../kafka/client');
 
 var resultObject;
 
@@ -159,6 +160,8 @@ router.post("/login", function (req, res) {
                                     console.log("Token " + token)
                                     res.json({
                                         success: true,
+                                        email: email,
+                                        radio: radio,
                                         token: "Bearer " + token
                                     });
                                 }
@@ -340,35 +343,62 @@ router.post("/ownersignup", function (req, res) {
     var cuisine = req.body.cuisine;
     var zipcode = req.body.zipcode;
 
-    bcrypt.hash(req.body.password, 10, function (err, hash) {
-
-        const owner = new Owner({
-            _id: new mongoose.Types.ObjectId(),
-            email: email,
-            password: hash,
-            name: name,
-            phone: "",
-            profileimage: "pro.jpg",
-            restaurantname: restaurant,
-            zipcode: zipcode,
-            restaurantimage: "",
-            cuisine: cuisine
-        })
-        console.log("object creatd " + owner)
-        owner.save().then(result => {
-            console.log(result);
-            res.writeHead(200, {
-                "Content-Type": "text/plain"
-            });
-            res.end("Successful Signup");
-        }).catch(error => {
-            console.log("error occured" + error);
+    kafka.make_request('owner_signup', req.body, function (err, results) {
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Inside err");
             res.writeHead(400, {
                 "Content-Type": "text/plain"
             });
-            res.end("Unsuccessful Signup");
-        });
+            res.end("Unsuccessful owner_signup");
+        } else {
+            if (results.length == 0) {
+                console.log("Inside err");
+                res.writeHead(400, {
+                    "Content-Type": "text/plain"
+                });
+                res.end("Unsuccessful Signup");
+            } else {
+                console.log("Inside else");
+                res.writeHead(200, {
+                    "Content-Type": "text/plain"
+                });
+                res.end("Successful owner_signup");
+            }
+        }
+
     });
+
+    // bcrypt.hash(req.body.password, 10, function (err, hash) {
+
+    //     const owner = new Owner({
+    //         _id: new mongoose.Types.ObjectId(),
+    //         email: email,
+    //         password: hash,
+    //         name: name,
+    //         phone: "",
+    //         profileimage: "pro.jpg",
+    //         restaurantname: restaurant,
+    //         zipcode: zipcode,
+    //         restaurantimage: "",
+    //         cuisine: cuisine
+    //     })
+    //     console.log("object creatd " + owner)
+    //     owner.save().then(result => {
+    //         console.log(result);
+    //         res.writeHead(200, {
+    //             "Content-Type": "text/plain"
+    //         });
+    //         res.end("Successful Signup");
+    //     }).catch(error => {
+    //         console.log("error occured" + error);
+    //         res.writeHead(400, {
+    //             "Content-Type": "text/plain"
+    //         });
+    //         res.end("Unsuccessful Signup");
+    //     });
+    // });
 });
 
 
@@ -418,31 +448,59 @@ router.post("/buyersignup", function (req, res) {
     var password = req.body.password;
     var email = req.body.email;
 
-    bcrypt.hash(req.body.password, 10, function (err, hash) {
 
-        const buyer = new Buyer({
-            _id: new mongoose.Types.ObjectId(),
-            email: email,
-            password: hash,
-            name: name,
-            phone: "",
-            profileimage: "pro.jpg",
-        })
-        console.log("object creatd " + buyer)
-        buyer.save().then(result => {
-            console.log(result);
-            res.writeHead(200, {
-                "Content-Type": "text/plain"
-            });
-            res.end("Successful Signup");
-        }).catch(error => {
-            console.log("error occured" + error);
+    kafka.make_request('buyer_signup', req.body, function (err, results) {
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Inside err");
             res.writeHead(400, {
                 "Content-Type": "text/plain"
             });
-            res.end("Unsuccessful Signup");
-        });
+            res.end("Unsuccessful buyer_signup");
+        } else {
+            if (results.length == 0) {
+                console.log("Inside err");
+                res.writeHead(400, {
+                    "Content-Type": "text/plain"
+                });
+                res.end("Unsuccessful buyer_signup");
+            } else {
+                console.log("Inside else");
+                res.writeHead(200, {
+                    "Content-Type": "text/plain"
+                });
+                res.end("Successful buyer_signup");
+            }
+        }
     });
+
+
+    // bcrypt.hash(req.body.password, 10, function (err, hash) {
+
+    //     const buyer = new Buyer({
+    //         _id: new mongoose.Types.ObjectId(),
+    //         email: email,
+    //         password: hash,
+    //         name: name,
+    //         phone: "",
+    //         profileimage: "pro.jpg",
+    //     })
+    //     console.log("object creatd " + buyer)
+    //     buyer.save().then(result => {
+    //         console.log(result);
+    //         res.writeHead(200, {
+    //             "Content-Type": "text/plain"
+    //         });
+    //         res.end("Successful Signup");
+    //     }).catch(error => {
+    //         console.log("error occured" + error);
+    //         res.writeHead(400, {
+    //             "Content-Type": "text/plain"
+    //         });
+    //         res.end("Unsuccessful Signup");
+    //     });
+    // });
 });
 
 
@@ -490,27 +548,55 @@ router.post("/ownerprofile", function (req, res) {
     console.log("Inside update owner profile Request");
     console.log("Req Body : ", req.body);
 
-    var name = req.body.username;
-    var email = req.body.email;
-    var phone = req.body.phone;
-    var restaurant = req.body.restaurant;
-    var cuisine = req.body.cuisine;
-    var idcookie = req.body.idcookie;
-    var emailcookie = req.body.emailcookie;
-
-    Owner.findOneAndUpdate({ email: emailcookie }, { $set: { name: name, email: email, restaurantname: restaurant, phone: phone, cuisine: cuisine } }, { new: true })
-        .then((doc) => {
-            console.log("profile update success", doc);
-            res.writeHead(200, {
-                "Content-Type": "text/plain"
-            });
-            res.end("Successfully updated status");
-        }).catch((e) => {
+    kafka.make_request('post_ownerprofile', req.body, function (err, results) {
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Inside err");
             res.writeHead(400, {
                 "Content-Type": "text/plain"
             });
-            res.end("Unsuccessfully updated profile");
-        })
+            res.end("Unsuccessful post_ownerprofile");
+        } else {
+            if (results.length == 0) {
+                console.log("Inside err");
+                res.writeHead(400, {
+                    "Content-Type": "text/plain"
+                });
+                res.end("Unsuccessful post_ownerprofile");
+            } else {
+                console.log("Inside else");
+                res.writeHead(200, {
+                    "Content-Type": "text/plain"
+                });
+                res.end("Successful post_ownerprofile");
+            }
+        }
+
+    });
+
+
+    // var name = req.body.username;
+    // var email = req.body.email;
+    // var phone = req.body.phone;
+    // var restaurant = req.body.restaurant;
+    // var cuisine = req.body.cuisine;
+    // var idcookie = req.body.idcookie;
+    // var emailcookie = req.body.emailcookie;
+
+    // Owner.findOneAndUpdate({ email: emailcookie }, { $set: { name: name, email: email, restaurantname: restaurant, phone: phone, cuisine: cuisine } }, { new: true })
+    //     .then((doc) => {
+    //         console.log("profile update success", doc);
+    //         res.writeHead(200, {
+    //             "Content-Type": "text/plain"
+    //         });
+    //         res.end("Successfully updated status");
+    //     }).catch((e) => {
+    //         res.writeHead(400, {
+    //             "Content-Type": "text/plain"
+    //         });
+    //         res.end("Unsuccessfully updated profile");
+    //     })
 });
 
 
@@ -555,24 +641,51 @@ router.post("/buyerprofile", function (req, res) {
     console.log("Inside update buyer profile Request");
     console.log("Req Body : ", req.body);
 
-    var name = req.body.username;
-    var email = req.body.email;
-    var phone = req.body.phone;
-    var emailcookie = req.body.emailcookie;
-
-    Buyer.findOneAndUpdate({ email: emailcookie }, { $set: { name: name, email: email, phone: phone } }, { new: true })
-        .then((doc) => {
-            console.log("Buyer profile update success", doc);
-            res.writeHead(200, {
-                "Content-Type": "text/plain"
-            });
-            res.end("Successfully updated status");
-        }).catch((e) => {
+    kafka.make_request('post_buyerprofile', req.body, function (err, results) {
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Inside err");
             res.writeHead(400, {
                 "Content-Type": "text/plain"
             });
-            res.end("Unsuccessfully updated Buyer profile");
-        })
+            res.end("Unsuccessful post_buyerprofile");
+        } else {
+            if (results.length == 0) {
+                console.log("Inside err");
+                res.writeHead(400, {
+                    "Content-Type": "text/plain"
+                });
+                res.end("Unsuccessful post_buyerprofile");
+            } else {
+                console.log("Inside else");
+                res.writeHead(200, {
+                    "Content-Type": "text/plain"
+                });
+                res.end("Successful post_buyerprofile");
+            }
+        }
+
+    });
+
+    // var name = req.body.username;
+    // var email = req.body.email;
+    // var phone = req.body.phone;
+    // var emailcookie = req.body.emailcookie;
+
+    // Buyer.findOneAndUpdate({ email: emailcookie }, { $set: { name: name, email: email, phone: phone } }, { new: true })
+    //     .then((doc) => {
+    //         console.log("Buyer profile update success", doc);
+    //         res.writeHead(200, {
+    //             "Content-Type": "text/plain"
+    //         });
+    //         res.end("Successfully updated status");
+    //     }).catch((e) => {
+    //         res.writeHead(400, {
+    //             "Content-Type": "text/plain"
+    //         });
+    //         res.end("Unsuccessfully updated Buyer profile");
+    //     })
 });
 
 
@@ -630,38 +743,68 @@ router.post("/buyerprofile", function (req, res) {
 
 router.get("/ownerprofile", function (req, res) {
     console.log("Inside owner profile");
-    var emailcookie = req.query.emailcookie;
 
-    Owner.find({ email: emailcookie }).then((doc) => {
-        console.log("ownerprofile success!" + doc)
 
-        Object.keys(doc).forEach(function (key) {
-            var row = doc[key];
-            resultObject = {
-                username: row.name,
-                email: row.email,
-                phone: row.phone,
-                restaurant: row.restaurantname,
-                cuisine: row.cuisine,
-                profileimage: row.profileimage,
-                restaurantimage: row.restaurantimage
+    kafka.make_request('get_ownerprofile', req.query, function (err, results) {
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Inside err");
+            res.writeHead(400, {
+                "Content-Type": "text/plain"
+            });
+            res.end("Unsuccessful get_ownerprofile");
+        } else {
+            if (results.length == 0) {
+                console.log("Inside err len 0");
+                res.writeHead(400, {
+                    "Content-Type": "text/plain"
+                });
+                res.end("Unsuccessful get_ownerprofile");
+            } else {
+                console.log("Inside else");
+                res.writeHead(200, {
+                    "Content-Type": "text/plain"
+                });
+                res.end(results);
             }
-            // var name = row.name;
-            console.log("Name : " + row.name)
-        })
+        }
 
-        res.writeHead(200, {
-            "Content-Type": "text/plain"
-        });
-        res.end(JSON.stringify(resultObject));
-    }).catch((err) => {
-        console.log("ownerprofile fail! " + err)
-        res.writeHead(400, {
-            "Content-Type": "text/plain"
-        });
-        //console.log(JSON.stringify(resultObject))
-        res.end("ownerprofile fail");
-    })
+    });
+
+
+    //     var emailcookie = req.query.emailcookie;
+
+    //     Owner.find({ email: emailcookie }).then((doc) => {
+    //         console.log("ownerprofile success!" + doc)
+
+    //         Object.keys(doc).forEach(function (key) {
+    //             var row = doc[key];
+    //             resultObject = {
+    //                 username: row.name,
+    //                 email: row.email,
+    //                 phone: row.phone,
+    //                 restaurant: row.restaurantname,
+    //                 cuisine: row.cuisine,
+    //                 profileimage: row.profileimage,
+    //                 restaurantimage: row.restaurantimage
+    //             }
+    //             // var name = row.name;
+    //             console.log("Name : " + row.name)
+    //         })
+
+    //         res.writeHead(200, {
+    //             "Content-Type": "text/plain"
+    //         });
+    //         res.end(JSON.stringify(resultObject));
+    //     }).catch((err) => {
+    //         console.log("ownerprofile fail! " + err)
+    //         res.writeHead(400, {
+    //             "Content-Type": "text/plain"
+    //         });
+    //         //console.log(JSON.stringify(resultObject))
+    //         res.end("ownerprofile fail");
+    //     })
 });
 
 
@@ -716,36 +859,65 @@ router.get("/ownerprofile", function (req, res) {
 
 router.get("/buyerprofile", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside buyer profile");
-    // var emailCookie = req.cookies.email;
-    var emailcookie = req.query.emailcookie
 
-    Buyer.find({ email: emailcookie }).then((doc) => {
-        console.log("buyerprofile success!" + doc)
-
-        Object.keys(doc).forEach(function (key) {
-            var row = doc[key];
-            resultObject = {
-                username: row.name,
-                email: row.email,
-                phone: row.phone,
-                profileimage: row.profileimage
+    kafka.make_request('get_buyerprofile', req.query, function (err, results) {
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Inside err");
+            res.writeHead(400, {
+                "Content-Type": "text/plain"
+            });
+            res.end("Unsuccessful get_buyerprofile");
+        } else {
+            if (results.length == 0) {
+                console.log("Inside err len 0");
+                res.writeHead(400, {
+                    "Content-Type": "text/plain"
+                });
+                res.end("Unsuccessful get_buyerprofile");
+            } else {
+                console.log("Inside else");
+                res.writeHead(200, {
+                    "Content-Type": "text/plain"
+                });
+                res.end(results);
             }
-            // var name = row.name;
-            console.log("Name : " + row.name)
-        })
+        }
 
-        res.writeHead(200, {
-            "Content-Type": "text/plain"
-        });
-        res.end(JSON.stringify(resultObject));
-    }).catch((err) => {
-        console.log("get buyerprofile! " + err)
-        res.writeHead(400, {
-            "Content-Type": "text/plain"
-        });
-        //console.log(JSON.stringify(resultObject))
-        res.end("get buyerprofile fail");
-    })
+    });
+
+
+
+    // var emailcookie = req.query.emailcookie
+
+    // Buyer.find({ email: emailcookie }).then((doc) => {
+    //     console.log("buyerprofile success!" + doc)
+
+    //     Object.keys(doc).forEach(function (key) {
+    //         var row = doc[key];
+    //         resultObject = {
+    //             username: row.name,
+    //             email: row.email,
+    //             phone: row.phone,
+    //             profileimage: row.profileimage
+    //         }
+    //         // var name = row.name;
+    //         console.log("Name : " + row.name)
+    //     })
+
+    //     res.writeHead(200, {
+    //         "Content-Type": "text/plain"
+    //     });
+    //     res.end(JSON.stringify(resultObject));
+    // }).catch((err) => {
+    //     console.log("get buyerprofile! " + err)
+    //     res.writeHead(400, {
+    //         "Content-Type": "text/plain"
+    //     });
+    //     //console.log(JSON.stringify(resultObject))
+    //     res.end("get buyerprofile fail");
+    // })
 });
 
 
