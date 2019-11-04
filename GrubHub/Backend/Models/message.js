@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var message = new mongoose.Schema({
-    _id: mongoose.Types.ObjectId,
+    // _id: mongoose.Types.ObjectId,
     message: String,
     sender: String,
     receiver: String,

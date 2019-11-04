@@ -8,6 +8,19 @@ var PostOwnerProfile = require('./services/postownerprofile');
 var PostBuyerProfile = require('./services/postbuyerprofile');
 var GetOwnerProfile = require('./services/getownerprofile');
 var GetBuyerProfile = require('./services/getbuyerprofile');
+var OwnerHome = require('./services/ownerhome');
+var OrderItemDetails = require('./services/orderitemdetails');
+var ChangeStatus = require('./services/changestatus');
+var OwnerSection = require('./services/ownersection');
+var SectionDetails = require('./services/sectiondetails');
+var UpdateSectionItems = require('./services/updatesectionitems');
+var AddItem = require('./services/additem');
+var DeleteSectionItems = require('./services/deletesectionitems');
+var AddSection = require('./services/addsection');
+var DeleteSection = require('./services/deletesection');
+var OwnerOldOrders = require('./services/owneroldorders');
+var OwnerMessage = require('./services/ownermessage');
+var OwnerViewMessage = require('./services/ownerviewmessage');
 
 function handleTopicRequest(topic_name, fname) {
     //var topic_name = 'root_topic';
@@ -49,3 +62,16 @@ handleTopicRequest("post_ownerprofile", PostOwnerProfile)
 handleTopicRequest("post_buyerprofile", PostBuyerProfile)
 handleTopicRequest("get_ownerprofile", GetOwnerProfile)
 handleTopicRequest("get_buyerprofile", GetBuyerProfile)
+handleTopicRequest("ownerhome", OwnerHome)
+handleTopicRequest("orderitemdetails", OrderItemDetails)
+handleTopicRequest("changestatus", ChangeStatus)
+handleTopicRequest("ownersection", OwnerSection)
+handleTopicRequest("sectiondetails", SectionDetails)
+handleTopicRequest("updatesectionitems", UpdateSectionItems)
+handleTopicRequest("additem", AddItem)
+handleTopicRequest("deletesectionitems", DeleteSectionItems)
+handleTopicRequest("addsection", AddSection)
+handleTopicRequest("deletesection", DeleteSection)
+handleTopicRequest("owneroldorders", OwnerOldOrders)
+handleTopicRequest("ownermessage", OwnerMessage)
+handleTopicRequest("ownerviewmessage", OwnerViewMessage)
