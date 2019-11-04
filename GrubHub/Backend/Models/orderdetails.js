@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var orderdetails = new mongoose.Schema({
-    _id: mongoose.Types.ObjectId,
+    // _id: mongoose.Types.ObjectId,
     itemname: String,
     itemquantity: String,
     itemprice: String,

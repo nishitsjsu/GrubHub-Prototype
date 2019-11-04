@@ -21,6 +21,18 @@ var DeleteSection = require('./services/deletesection');
 var OwnerOldOrders = require('./services/owneroldorders');
 var OwnerMessage = require('./services/ownermessage');
 var OwnerViewMessage = require('./services/ownerviewmessage');
+var ViewRestaurants = require('./services/viewrestaurants');
+var BuyerSection = require('./services/buyersection');
+var SectionDetailsBuyer = require('./services/sectiondetailsbuyer');
+var AddToCart = require('./services/addtocart');
+var ViewCart = require('./services/viewcart');
+var CalculateSum = require('./services/calculateSum');
+var CartItems = require('./services/cartitems');
+var PlaceOrder = require('./services/placeorder');
+var BuyerPastOrders = require('./services/buyerpastorders');
+var BuyerFutureOrders = require('./services/buyerfutureorders');
+var BuyerMessage = require('./services/buyermessage');
+var BuyerViewMessage = require('./services/buyerviewmessage');
 
 function handleTopicRequest(topic_name, fname) {
     //var topic_name = 'root_topic';
@@ -75,3 +87,16 @@ handleTopicRequest("deletesection", DeleteSection)
 handleTopicRequest("owneroldorders", OwnerOldOrders)
 handleTopicRequest("ownermessage", OwnerMessage)
 handleTopicRequest("ownerviewmessage", OwnerViewMessage)
+handleTopicRequest("viewrestaurants", ViewRestaurants)
+handleTopicRequest("buyersection", BuyerSection)
+handleTopicRequest("sectiondetailsbuyer", SectionDetailsBuyer)
+handleTopicRequest("addtocart", AddToCart)
+handleTopicRequest("viewcart", ViewCart)
+handleTopicRequest("calculateSum", CalculateSum)
+handleTopicRequest("cartitems", CartItems)
+handleTopicRequest("placeorder", PlaceOrder)
+handleTopicRequest("buyerpastorders", BuyerPastOrders)
+handleTopicRequest("buyerfutureorders", BuyerFutureOrders)
+handleTopicRequest("buyermessage", BuyerMessage)
+handleTopicRequest("buyerviewmessage", BuyerViewMessage)
+

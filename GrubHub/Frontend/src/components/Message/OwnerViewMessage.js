@@ -129,7 +129,7 @@ class OwnerViewMessage extends Component {
                 // </tr>
                 <Draggable {...dragHandlers}>
                     <tr key="index">
-                        <td>{order._id}</td>
+                        <td>{order.orderid}</td>
                         <td>{order.restaurant}</td>
                         <td>{order.message}</td>
                         <td>{order.sender}</td>

@@ -69,7 +69,7 @@ class BuyerViewMessage extends Component {
                 //     <OrderData key={Math.random} data={order}></OrderData>
                 // </tr>
                 <tr key="index">
-                    <td>{order._id}</td>
+                    <td>{order.orderid}</td>
                     <td>{order.restaurant}</td>
                     <td>{order.message}</td>
                 </tr>

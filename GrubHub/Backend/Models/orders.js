@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var orders = new mongoose.Schema({
-    _id: mongoose.Types.ObjectId,
+    // _id: mongoose.Types.ObjectId,
     personname: String,
     personaddress: String,
     status: String,
