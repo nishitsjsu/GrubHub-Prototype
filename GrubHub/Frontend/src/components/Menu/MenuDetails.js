@@ -40,7 +40,7 @@ class MenuDetails extends Component {
 
         return (
             <Fragment>
-                <td>{this.props.data.sectionid}</td>
+                {/* <td>{this.props.data.sectionid}</td> */}
                 <td>{this.props.data.name}</td>
                 <td style={{ width: "20%" }}><img style={{ width: "50%", height: "20%" }} src={this.state.image} /></td>
                 <td>{this.props.data.description}</td>

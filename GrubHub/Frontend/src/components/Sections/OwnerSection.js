@@ -98,7 +98,7 @@ class OwnerSection extends Component {
                     <table class="table table-bordered table-hover" style={{ textAlign: "left" }}>
                         <thead class="thead-dark" style={{ textAlign: "center" }}>
                             <tr>
-                                <th>Section ID</th>
+                                {/* <th>Section ID</th> */}
                                 <th>Section Name</th>
                                 <th>Details</th>
                                 {/* <th>Person Address</th>

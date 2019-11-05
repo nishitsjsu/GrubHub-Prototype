@@ -1,6 +1,7 @@
 var connection = new require('./kafka/Connection');
 //topics files
 //var signin = require('./services/signin.js');
+var Login = require('./services/log_in');
 var Books = require('./services/books.js');
 var BuyerSignup = require('./services/buyersignup');
 var OwnerSignup = require('./services/ownersignup');
@@ -99,4 +100,5 @@ handleTopicRequest("buyerpastorders", BuyerPastOrders)
 handleTopicRequest("buyerfutureorders", BuyerFutureOrders)
 handleTopicRequest("buyermessage", BuyerMessage)
 handleTopicRequest("buyerviewmessage", BuyerViewMessage)
+handleTopicRequest("login", Login)
 

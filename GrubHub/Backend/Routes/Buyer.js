@@ -1,4 +1,5 @@
 var express = require('express');
+var app = express();
 var router = express.Router();
 var pool = require('../Db/Connections').pool;
 var cont = require('../Db/Connections').cont;
@@ -13,6 +14,9 @@ var Orderdetails = require("../Models/orderdetails")
 var Message = require("../Models/message")
 const mongoose = require("mongoose")
 const kafka = require('../kafka/client');
+const passport = require("passport");
+require('../config/passport')(passport)
+app.use(passport.initialize());
 
 // router.get("/viewrestaurants", function (req, res) {
 //     console.log("Inside viewrestaurants");

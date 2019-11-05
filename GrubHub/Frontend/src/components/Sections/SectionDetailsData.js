@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Redirect } from "react-router";
 import SectionDetails from "../Sections/SectionDetails";
 import rootURL from '../config';
+import setAuthorizationToken from '../../utils/setAuthorizationToken'
 // import { Z_BLOCK } from "zlib";
 
 class SectionDetailsData extends Component {
@@ -86,6 +87,7 @@ class SectionDetailsData extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
+        setAuthorizationToken(localStorage.getItem('jwt'));
         axios.post(rootURL + "/deletesectionitems", data).then(response => {
             console.log("Status Code : ", response.status);
             if (response.status === 200) {
@@ -107,7 +109,7 @@ class SectionDetailsData extends Component {
 
         return (
             <Fragment>
-                <td>{this.props.data.sectionid}</td>
+                {/* <td>{this.props.data.sectionid}</td> */}
                 <td><input onChange={this.nameChangeHandler} type="text" id="name" name="name" value={this.state.name} /></td>
                 <td style={{ width: "20%" }}><img style={{ width: "50%", height: "20%" }} src={this.state.image} /></td>
                 <td><input onChange={this.desciptionChangeHandler} type="text" id="description" name="description" value={this.state.description} onChange={this.desciptionChangeHandler} /></td>

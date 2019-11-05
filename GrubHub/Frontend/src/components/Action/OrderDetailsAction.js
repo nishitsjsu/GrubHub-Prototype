@@ -1,5 +1,6 @@
 import axios from 'axios';
 import rootURL from '../config';
+import setAuthorizationToken from '../../utils/setAuthorizationToken'
 export const SUCCESS_ORDER_DETAILS_FETCH = "succes_order_details_fetch";
 export const FAILURE_ORDER_DETAILS_FETCH = "failure_order_details_fetch";
 
@@ -18,6 +19,7 @@ function getError(response) {
 }
 function orderdetailsFetch_function(orderid) {
     console.log("Data in data fecth function ")
+    setAuthorizationToken(localStorage.getItem('jwt'));
     return function (dispatch) {
         console.log("action data is");
         axios.defaults.withCredentials = true;

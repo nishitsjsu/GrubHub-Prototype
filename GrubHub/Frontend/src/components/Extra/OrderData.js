@@ -39,7 +39,7 @@ class OrderData extends Component {
 
         return (
             <Fragment>
-                <td>{this.props.data.orderid}</td>
+                <td>{this.props.data._id}</td>
                 <td>{this.props.data.personname}</td>
                 <td>{this.props.data.personaddress}</td>
                 <td>{this.props.data.status}</td>

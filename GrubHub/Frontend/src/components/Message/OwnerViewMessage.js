@@ -17,6 +17,7 @@ class OwnerViewMessage extends Component {
             authFlag: false,
             orders: [],
             emailcookie: cookie.load("email"),
+            restaurantcookie: cookie.load("restaurant"),
             currenPage: 1,
             sectionsPerPage: 1,
             activeDrags: 0,
@@ -143,9 +144,10 @@ class OwnerViewMessage extends Component {
                 <Draggable {...dragHandlers}>
                     <tr key="index">
                         <td>{order.orderid}</td>
-                        <td>{order.restaurant}</td>
+                        {/* <td>{order.restaurant}</td> */}
                         <td>{order.message}</td>
                         <td>{order.sender}</td>
+                        <td><Link to={`/ownermessage/${order.sender}/${order.sender}/${this.state.emailcookie}/${this.state.restaurantcookie}/${order.orderid}`} ><button className="btn btn-primary">Message Buyer</button></Link></td>
                     </tr>
                 </Draggable >
             )
@@ -164,9 +166,10 @@ class OwnerViewMessage extends Component {
                         <thead class="thead-dark" style={{ textAlign: "center" }}>
                             <tr>
                                 <th>Order ID</th>
-                                <th>Restaurant</th>
+                                {/* <th>Restaurant</th> */}
                                 <th>Message</th>
                                 <th>Sender</th>
+                                <th>Reply</th>
                             </tr>
                         </thead>
                         <tbody>

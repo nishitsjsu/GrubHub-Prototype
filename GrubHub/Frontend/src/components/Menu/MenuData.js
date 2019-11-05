@@ -65,7 +65,7 @@ class MenuData extends Component {
                 <table class="table table-bordered table-hover" style={{ textAlign: "left" }}>
                     <thead class="thead-dark" style={{ textAlign: "center" }}>
                         <tr>
-                            <th>Section</th>
+                            {/* <th>Section</th> */}
                             <th>Item Name</th>
                             <th>Item Image</th>
                             <th>Item Description</th>

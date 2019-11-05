@@ -1,5 +1,6 @@
 import axios from 'axios';
 import rootURL from '../config';
+import setAuthorizationToken from '../../utils/setAuthorizationToken'
 export const SUCCESS_OWNER_DATA_FETCH = "succes_owner_data_fetch";
 export const FAILURE_OWNER_DATA_FETCH = "failure_owner_data_fetch";
 //traveler login action
@@ -17,6 +18,7 @@ function getError(response) {
 }
 function ownerProfile_function(emailcookie) {
     console.log("Data in actions " + emailcookie)
+    setAuthorizationToken(localStorage.getItem('jwt'));
     return function (dispatch) {
         console.log("action data is", emailcookie);
 

@@ -4,6 +4,7 @@ import axios from "axios";
 import cookie from "react-cookies";
 import { Redirect } from "react-router";
 import rootURL from '../config';
+import setAuthorizationToken from '../../utils/setAuthorizationToken'
 
 //Define a Login Component
 class AddSection extends Component {
@@ -51,6 +52,7 @@ class AddSection extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
+        setAuthorizationToken(localStorage.getItem('jwt'));
         axios.post(rootURL + "/addsection", data).then(response => {
             console.log("Status Code : ", response.status);
             if (response.status === 200) {

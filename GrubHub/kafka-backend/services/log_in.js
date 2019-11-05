@@ -2,7 +2,7 @@ var Buyer = require("../../Backend/Models/buyer");
 var Owner = require("../../Backend/Models/owner");
 var bcrypt = require('bcrypt');
 const mongoose = require("../../Backend/mongoose")
-
+const jwt = require("jsonwebtoken");
 function handle_request(msg, callback) {
 
 
@@ -48,35 +48,41 @@ function handle_request(msg, callback) {
                                     console.log("Error in jwt token" + err)
                                 } else {
                                     console.log("Token " + token)
-                                    res.json({
+                                    var result = {
+                                        email: email,
+                                        id: id,
+                                        name: name,
+                                        radio: radio,
                                         success: true,
                                         token: "Bearer " + token
-                                    });
+                                    }
+                                    callback(null, result)
                                 }
                             }
                         );
 
-                        res.cookie("email", email, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        res.cookie("cookie", radio, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        res.cookie("id", id, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        res.cookie("name", name, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        req.session.user = email;
+
+                        // res.cookie("email", email, {
+                        //     maxAge: 900000,
+                        //     httpOnly: false,
+                        //     path: "/"
+                        // });
+                        // res.cookie("cookie", radio, {
+                        //     maxAge: 900000,
+                        //     httpOnly: false,
+                        //     path: "/"
+                        // });
+                        // res.cookie("id", id, {
+                        //     maxAge: 900000,
+                        //     httpOnly: false,
+                        //     path: "/"
+                        // });
+                        // res.cookie("name", name, {
+                        //     maxAge: 900000,
+                        //     httpOnly: false,
+                        //     path: "/"
+                        // });
+                        // req.session.user = email;
 
                         // res.writeHead(200, {
                         //     "Content-Type": "text/plain"
@@ -113,39 +119,71 @@ function handle_request(msg, callback) {
                     console.log("HAsh " + name + id + hash)
 
                     if (bcrypt.compareSync(password, hash)) {
-                        res.cookie("email", email, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        res.cookie("cookie", radio, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        res.cookie("id", id, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        res.cookie("name", name, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        res.cookie("cuisine", cuisine, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        res.cookie("restaurant", restaurant, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        req.session.user = email;
 
-                        callback(null, result);
+                        const payload = {
+                            name: name,
+                            id: id,
+                            email: email,
+                            radio: radio
+                        };
+
+                        jwt.sign(
+                            payload,
+                            "CMPE_273_Grubhub_secret",
+                            { expiresIn: 3600 },
+                            (err, token) => {
+                                if (err) {
+                                    console.log("Error in jwt token" + err)
+                                } else {
+                                    console.log("Token " + token)
+                                    var result = {
+                                        email: email,
+                                        id: id,
+                                        name: name,
+                                        radio: radio,
+                                        cuisine: cuisine,
+                                        restaurant: restaurant,
+                                        success: true,
+                                        token: "Bearer " + token
+                                    }
+                                    callback(null, result)
+                                }
+                            }
+                        );
+
+                        // res.cookie("email", email, {
+                        //     maxAge: 900000,
+                        //     httpOnly: false,
+                        //     path: "/"
+                        // });
+                        // res.cookie("cookie", radio, {
+                        //     maxAge: 900000,
+                        //     httpOnly: false,
+                        //     path: "/"
+                        // });
+                        // res.cookie("id", id, {
+                        //     maxAge: 900000,
+                        //     httpOnly: false,
+                        //     path: "/"
+                        // });
+                        // res.cookie("name", name, {
+                        //     maxAge: 900000,
+                        //     httpOnly: false,
+                        //     path: "/"
+                        // });
+                        // res.cookie("cuisine", cuisine, {
+                        //     maxAge: 900000,
+                        //     httpOnly: false,
+                        //     path: "/"
+                        // });
+                        // res.cookie("restaurant", restaurant, {
+                        //     maxAge: 900000,
+                        //     httpOnly: false,
+                        //     path: "/"
+                        // });
+                        // req.session.user = email;
+
+                        // callback(null, result);
                     } else {
                         console.log(" Invalid credentials found ");
                         callback(null, []);

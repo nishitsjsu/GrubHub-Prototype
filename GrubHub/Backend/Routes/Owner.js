@@ -1,4 +1,5 @@
 var express = require('express');
+var app = express();
 var router = express.Router();
 var pool = require('../Db/Connections').pool;
 var cont = require('../Db/Connections').cont;
@@ -11,6 +12,10 @@ var Orderdetails = require("../Models/orderdetails")
 var Ownermessage = require("../Models/message")
 const mongoose = require("mongoose")
 var kafka = require('../kafka/client');
+const jwt = require("jsonwebtoken");
+const passport = require("passport");
+require('../config/passport')(passport)
+app.use(passport.initialize());
 
 // router.get("/ownerhome", function (req, res) {
 //     console.log("Inside OwnerHome");
@@ -39,7 +44,7 @@ var kafka = require('../kafka/client');
 // });
 
 
-router.get("/ownerhome", function (req, res) {
+router.get("/ownerhome", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside OwnerHome");
 
     kafka.make_request('ownerhome', req.query, function (err, results) {
@@ -116,7 +121,7 @@ router.get("/ownerhome", function (req, res) {
 // });
 
 
-router.get("/orderitemdetails", function (req, res) {
+router.get("/orderitemdetails", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside orderitemdetails");
 
     kafka.make_request('orderitemdetails', req.query, function (err, results) {
@@ -200,7 +205,7 @@ router.get("/orderitemdetails", function (req, res) {
 //     });
 // });
 
-router.post("/changestatus", function (req, res) {
+router.post("/changestatus", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside changestatus Order Request");
     console.log("Req Body : ", req.body);
 
@@ -275,7 +280,7 @@ router.post("/changestatus", function (req, res) {
 //     });
 // });
 
-router.get("/ownersection", function (req, res) {
+router.get("/ownersection", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside OwnerSection");
 
     kafka.make_request('ownersection', req.query, function (err, results) {
@@ -353,7 +358,7 @@ router.get("/ownersection", function (req, res) {
 // });
 
 
-router.get("/sectiondetails", function (req, res) {
+router.get("/sectiondetails", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside Section Details");
 
 
@@ -438,7 +443,7 @@ router.get("/sectiondetails", function (req, res) {
 // });
 
 
-router.post("/updatesectionitems", function (req, res) {
+router.post("/updatesectionitems", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside update section items Request");
     console.log("Req Body : ", req.body);
 
@@ -523,7 +528,7 @@ router.post("/updatesectionitems", function (req, res) {
 // });
 
 
-router.post("/additem", function (req, res) {
+router.post("/additem", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside additem Request");
     console.log("Req Body : ", req.body);
 
@@ -630,7 +635,7 @@ router.post("/additem", function (req, res) {
 //     })
 // })
 
-router.post('/additemuploadimage', function (req, res) {
+router.post('/additemuploadimage', passport.authenticate("jwt", { session: false }), function (req, res) {
     upload(req, res, err => {
         if (err) {
             res.writeHead(400, {
@@ -707,7 +712,7 @@ router.post('/additemuploadimage', function (req, res) {
 // });
 
 
-router.post("/deletesectionitems", function (req, res) {
+router.post("/deletesectionitems", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside deletesectionitems Request");
     console.log("Req Body : ", req.body);
 
@@ -787,7 +792,7 @@ router.post("/deletesectionitems", function (req, res) {
 //     });
 // });
 
-router.post("/addsection", function (req, res) {
+router.post("/addsection", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside Add Section Request");
     console.log("Req Body : ", req.body);
 
@@ -844,7 +849,7 @@ router.post("/addsection", function (req, res) {
     // });
 });
 
-router.post("/deletesection", function (req, res) {
+router.post("/deletesection", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside deletesection Request");
     console.log("Req Body : ", req.body);
 
@@ -925,7 +930,7 @@ router.post("/deletesection", function (req, res) {
 //     });
 // });
 
-router.get("/owneroldorders", function (req, res) {
+router.get("/owneroldorders", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside owneroldorders");
 
     kafka.make_request('owneroldorders', req.query, function (err, results) {
@@ -974,7 +979,7 @@ router.get("/owneroldorders", function (req, res) {
 
 //----------new functionality
 
-router.post("/ownermessage", function (req, res) {
+router.post("/ownermessage", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside Add Section Request");
     console.log("Req Body : ", req.body);
 
@@ -1035,7 +1040,7 @@ router.post("/ownermessage", function (req, res) {
     // });
 });
 
-router.get("/ownerviewmessage", function (req, res) {
+router.get("/ownerviewmessage", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside buyerviewmessage ");
 
     kafka.make_request('ownerviewmessage', req.query, function (err, results) {

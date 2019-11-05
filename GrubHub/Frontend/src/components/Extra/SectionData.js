@@ -19,7 +19,7 @@ class SectionData extends Component {
 
         return (
             <Fragment>
-                <td>{this.props.data.sectionid}</td>
+                {/* <td>{this.props.data.sectionid}</td> */}
                 <td>{this.props.data.sectionname}</td>
                 {/* <td>{this.props.data.personaddress}</td>
                 <td>{this.props.data.status}</td> */}

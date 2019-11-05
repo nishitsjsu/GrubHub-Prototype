@@ -1,5 +1,6 @@
 import axios from 'axios';
 import rootURL from '../config';
+import setAuthorizationToken from '../../utils/setAuthorizationToken'
 export const SUCCESS_OWNER_HOME_FETCH = "succes_owner_home_fetch";
 export const FAILURE_OWNER_HOME_FETCH = "failure_owner_home_fetch";
 
@@ -18,6 +19,7 @@ function getError(response) {
 }
 function ownerhomeFetch_function(emailcookie) {
     console.log("Data in data fecth function ")
+    setAuthorizationToken(localStorage.getItem('jwt'));
     return function (dispatch) {
         console.log("action data is");
         axios.defaults.withCredentials = true;

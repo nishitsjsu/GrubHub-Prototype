@@ -12,9 +12,10 @@ const mongoose = require("mongoose")
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
 require('../config/passport')(passport)
+app.use(passport.initialize());
 // require("../config/passport")
 app.use(express.static('public'))
-app.use(passport.initialize());
+
 var kafka = require('../kafka/client');
 
 var resultObject;
@@ -113,180 +114,210 @@ router.post("/login", function (req, res) {
     console.log("Inside Login Post Request");
     //console.log("Req Body : ", username + "password : ",password);
     console.log("Req Body : ", req.body);
-    var email = req.body.username;
-    var password = req.body.password;
-    var radio = req.body.radio;
 
-    if (radio == "buyer") {
-
-        Buyer.find({ email: email }).then((doc) => {
-            console.log(doc);
-            if (doc.length == 0) {
-                console.log(" No users found ");
-                res.writeHead(400, {
-                    "Content-Type": "text/plain"
-                });
-                res.end("Unsuccessful Login");
-            } else {
-                console.log("User found")
-                Object.keys(doc).forEach(function (key) {
-                    var row = doc[key];
-                    var name = row.name;
-                    // var emailrow = row.email;
-                    var id = row._id;
-                    var hash = row.password;
-
-                    console.log("HAsh " + name + id + hash)
-
-                    if (bcrypt.compareSync(password, hash)) {
-
-                        const payload = {
-                            name: name,
-                            id: id,
-                            email: email,
-                            radio: radio
-                        };
-
-                        console.log("PAyload " + payload.email)
-
-                        jwt.sign(
-                            payload,
-                            "CMPE_273_Grubhub_secret",
-                            { expiresIn: 3600 },
-                            (err, token) => {
-                                if (err) {
-                                    console.log("Error in jwt token" + err)
-                                } else {
-                                    console.log("Token " + token)
-                                    res.json({
-                                        success: true,
-                                        email: email,
-                                        radio: radio,
-                                        token: "Bearer " + token
-                                    });
-                                }
-                            }
-                        );
-
-                        res.cookie("email", email, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        res.cookie("cookie", radio, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        res.cookie("id", id, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        res.cookie("name", name, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        req.session.user = email;
-
-                        // res.writeHead(200, {
-                        //     "Content-Type": "text/plain"
-                        // });
-                        // res.end("Successful Login");
-                    } else {
-                        console.log(" Invalid credentials found ");
-                        res.writeHead(400, {
-                            "Content-Type": "text/plain"
-                        });
-                        res.end("Invalid credentials in Login");
-                    }
-                })
-            }
-
-        }).catch(err => {
-            console.log(err)
+    kafka.make_request('login', req.body, function (err, results) {
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Inside err");
             res.writeHead(400, {
                 "Content-Type": "text/plain"
             });
-            res.end("Error in Login");
-        });
-    } else if (radio == "owner") {
-        Owner.find({ email: email }).then((doc) => {
-            console.log(doc);
-            if (doc.length == 0) {
-                console.log(" No users found ");
+            res.end("Unsuccessful login");
+        } else {
+            if (results.length == 0) {
+                console.log("Inside err");
                 res.writeHead(400, {
                     "Content-Type": "text/plain"
                 });
-                res.end("Unsuccessful Login");
+                res.end("Unsuccessful login");
             } else {
-                console.log("User found")
-                Object.keys(doc).forEach(function (key) {
-                    var row = doc[key];
-                    var name = row.name;
-                    // var emailrow = row.email;
-                    var id = row._id;
-                    var hash = row.password;
-                    var cuisine = row.cuisine;
-                    var restaurant = row.restaurantname;
-
-                    console.log("HAsh " + name + id + hash)
-
-                    if (bcrypt.compareSync(password, hash)) {
-                        res.cookie("email", email, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        res.cookie("cookie", radio, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        res.cookie("id", id, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        res.cookie("name", name, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        res.cookie("cuisine", cuisine, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        res.cookie("restaurant", restaurant, {
-                            maxAge: 900000,
-                            httpOnly: false,
-                            path: "/"
-                        });
-                        req.session.user = email;
-
-                        res.writeHead(200, {
-                            "Content-Type": "text/plain"
-                        });
-                        res.end("Successful Login");
-                    } else {
-                        console.log(" Invalid credentials found ");
-                        res.writeHead(400, {
-                            "Content-Type": "text/plain"
-                        });
-                        res.end("Invalid credentials in Login");
-                    }
-                })
+                console.log("Inside else");
+                res.writeHead(200, {
+                    "Content-Type": "text/plain"
+                });
+                res.end(JSON.stringify(results));
             }
+        }
 
-        }).catch(err => {
-            res.writeHead(400, {
-                "Content-Type": "text/plain"
-            });
-            res.end("Error in Login");
-        });
-    }
+    });
+
+
+
+    // var email = req.body.username;
+    // var password = req.body.password;
+    // var radio = req.body.radio;
+
+    // if (radio == "buyer") {
+
+    //     Buyer.find({ email: email }).then((doc) => {
+    //         console.log(doc);
+    //         if (doc.length == 0) {
+    //             console.log(" No users found ");
+    //             res.writeHead(400, {
+    //                 "Content-Type": "text/plain"
+    //             });
+    //             res.end("Unsuccessful Login");
+    //         } else {
+    //             console.log("User found")
+    //             Object.keys(doc).forEach(function (key) {
+    //                 var row = doc[key];
+    //                 var name = row.name;
+    //                 // var emailrow = row.email;
+    //                 var id = row._id;
+    //                 var hash = row.password;
+
+    //                 console.log("HAsh " + name + id + hash)
+
+    //                 if (bcrypt.compareSync(password, hash)) {
+
+    //                     const payload = {
+    //                         name: name,
+    //                         id: id,
+    //                         email: email,
+    //                         radio: radio
+    //                     };
+
+    //                     console.log("PAyload " + payload.email)
+
+    //                     jwt.sign(
+    //                         payload,
+    //                         "CMPE_273_Grubhub_secret",
+    //                         { expiresIn: 3600 },
+    //                         (err, token) => {
+    //                             if (err) {
+    //                                 console.log("Error in jwt token" + err)
+    //                             } else {
+    //                                 console.log("Token " + token)
+    //                                 res.json({
+    //                                     success: true,
+    //                                     email: email,
+    //                                     radio: radio,
+    //                                     token: "Bearer " + token
+    //                                 });
+    //                             }
+    //                         }
+    //                     );
+
+    //                     res.cookie("email", email, {
+    //                         maxAge: 900000,
+    //                         httpOnly: false,
+    //                         path: "/"
+    //                     });
+    //                     res.cookie("cookie", radio, {
+    //                         maxAge: 900000,
+    //                         httpOnly: false,
+    //                         path: "/"
+    //                     });
+    //                     res.cookie("id", id, {
+    //                         maxAge: 900000,
+    //                         httpOnly: false,
+    //                         path: "/"
+    //                     });
+    //                     res.cookie("name", name, {
+    //                         maxAge: 900000,
+    //                         httpOnly: false,
+    //                         path: "/"
+    //                     });
+    //                     req.session.user = email;
+
+    //                     // res.writeHead(200, {
+    //                     //     "Content-Type": "text/plain"
+    //                     // });
+    //                     // res.end("Successful Login");
+    //                 } else {
+    //                     console.log(" Invalid credentials found ");
+    //                     res.writeHead(400, {
+    //                         "Content-Type": "text/plain"
+    //                     });
+    //                     res.end("Invalid credentials in Login");
+    //                 }
+    //             })
+    //         }
+
+    //     }).catch(err => {
+    //         console.log(err)
+    //         res.writeHead(400, {
+    //             "Content-Type": "text/plain"
+    //         });
+    //         res.end("Error in Login");
+    //     });
+    // } else if (radio == "owner") {
+    //     Owner.find({ email: email }).then((doc) => {
+    //         console.log(doc);
+    //         if (doc.length == 0) {
+    //             console.log(" No users found ");
+    //             res.writeHead(400, {
+    //                 "Content-Type": "text/plain"
+    //             });
+    //             res.end("Unsuccessful Login");
+    //         } else {
+    //             console.log("User found")
+    //             Object.keys(doc).forEach(function (key) {
+    //                 var row = doc[key];
+    //                 var name = row.name;
+    //                 // var emailrow = row.email;
+    //                 var id = row._id;
+    //                 var hash = row.password;
+    //                 var cuisine = row.cuisine;
+    //                 var restaurant = row.restaurantname;
+
+    //                 console.log("HAsh " + name + id + hash)
+
+    //                 if (bcrypt.compareSync(password, hash)) {
+    //                     res.cookie("email", email, {
+    //                         maxAge: 900000,
+    //                         httpOnly: false,
+    //                         path: "/"
+    //                     });
+    //                     res.cookie("cookie", radio, {
+    //                         maxAge: 900000,
+    //                         httpOnly: false,
+    //                         path: "/"
+    //                     });
+    //                     res.cookie("id", id, {
+    //                         maxAge: 900000,
+    //                         httpOnly: false,
+    //                         path: "/"
+    //                     });
+    //                     res.cookie("name", name, {
+    //                         maxAge: 900000,
+    //                         httpOnly: false,
+    //                         path: "/"
+    //                     });
+    //                     res.cookie("cuisine", cuisine, {
+    //                         maxAge: 900000,
+    //                         httpOnly: false,
+    //                         path: "/"
+    //                     });
+    //                     res.cookie("restaurant", restaurant, {
+    //                         maxAge: 900000,
+    //                         httpOnly: false,
+    //                         path: "/"
+    //                     });
+    //                     req.session.user = email;
+
+    //                     res.writeHead(200, {
+    //                         "Content-Type": "text/plain"
+    //                     });
+    //                     res.end("Successful Login");
+    //                 } else {
+    //                     console.log(" Invalid credentials found ");
+    //                     res.writeHead(400, {
+    //                         "Content-Type": "text/plain"
+    //                     });
+    //                     res.end("Invalid credentials in Login");
+    //                 }
+    //             })
+    //         }
+
+    //     }).catch(err => {
+    //         res.writeHead(400, {
+    //             "Content-Type": "text/plain"
+    //         });
+    //         res.end("Error in Login");
+    //     });
+    // }
 });
 
 
