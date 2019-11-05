@@ -6,6 +6,7 @@ import { Redirect } from "react-router";
 import { connect } from "react-redux";
 import dataFetch_function from "../Action/BuyerProfileAction"
 import dataUpdate_function from "../Action/BuyerProfileUpdateAction";
+import rootURL from '../config';
 
 //Define a Login Component
 class BuyerProfile extends Component {
@@ -36,7 +37,7 @@ class BuyerProfile extends Component {
       username: nextProps.username,
       email: nextProps.email,
       phone: nextProps.phone,
-      imagePath: "http://localhost:3001/profilepics/" + nextProps.profileimage + ""
+      imagePath: rootURL + "/profilepics/" + nextProps.profileimage + ""
     })
   }
 
@@ -150,12 +151,12 @@ class BuyerProfile extends Component {
       }
     }
     axios
-      .post('http://localhost:3001/buyerprofileuploadimage', formData, config)
+      .post(rootURL + '/buyerprofileuploadimage', formData, config)
       .then(response => {
         console.log('The file is successfully uploaded')
         console.log(response.data.filename)
         this.setState({
-          imagePath: "http://localhost:3001/profilepics/" + response.data.filename + ""
+          imagePath: rootURL + "/profilepics/" + response.data.filename + ""
 
         })
       })

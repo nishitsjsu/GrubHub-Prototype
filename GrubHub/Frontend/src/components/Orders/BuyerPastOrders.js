@@ -5,6 +5,8 @@ import cookie from 'react-cookies';
 import { Link } from "react-router-dom";
 import { Redirect } from 'react-router';
 import OrderData from "../Extra/OrderData"
+import setAuthorizationToken from '../../utils/setAuthorizationToken'
+import rootURL from '../config';
 
 class BuyerPastOrders extends Component {
     constructor(props) {
@@ -18,7 +20,8 @@ class BuyerPastOrders extends Component {
     }
     //get the orders data from backend  
     componentDidMount() {
-        axios.get('http://localhost:3001/buyerpastorders', {
+        setAuthorizationToken(localStorage.getItem('jwt'));
+        axios.get(rootURL + '/buyerpastorders', {
             params: {
                 idcookie: this.state.idcookie,
                 emailcookie: this.state.emailcookie,

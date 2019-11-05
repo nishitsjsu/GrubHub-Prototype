@@ -7,6 +7,7 @@ import { resolve } from "url";
 import { connect } from "react-redux";
 import ownerProfile_function from "../Action/OwnerProfileAction";
 import owner_dataUpdate_function from "../Action/OwnerProfileUpdateAction";
+import rootURL from '../config';
 
 //Define a Login Component
 class OwnerProfile extends Component {
@@ -46,8 +47,8 @@ class OwnerProfile extends Component {
       phone: nextProps.phone,
       restaurant: nextProps.restaurant,
       cuisine: nextProps.cuisine,
-      imagePath: "http://localhost:3001/profilepics/" + nextProps.imagePath + "",
-      imagePath1: "http://localhost:3001/profilepics/" + nextProps.imagePath1 + "",
+      imagePath: rootURL + "/profilepics/" + nextProps.imagePath + "",
+      imagePath1: rootURL + "/profilepics/" + nextProps.imagePath1 + "",
     })
   }
 
@@ -170,12 +171,12 @@ class OwnerProfile extends Component {
       }
     }
     axios
-      .post('http://localhost:3001/ownerprofileuploadprofile', formData, config)
+      .post(rootURL + '/ownerprofileuploadprofile', formData, config)
       .then(response => {
         console.log('The file is successfully uploaded')
         console.log(response.data.filename)
         this.setState({
-          imagePath: "http://localhost:3001/profilepics/" + response.data.filename + ""
+          imagePath: rootURL + "/profilepics/" + response.data.filename + ""
 
         })
       })
@@ -197,12 +198,12 @@ class OwnerProfile extends Component {
       }
     }
     axios
-      .post('http://localhost:3001/ownerprofileuploadrestaurant', formData, config)
+      .post(rootURL + '/ownerprofileuploadrestaurant', formData, config)
       .then(response => {
         console.log('The file is successfully uploaded')
         console.log(response.data.filename)
         this.setState({
-          imagePath1: "http://localhost:3001/profilepics/" + response.data.filename + ""
+          imagePath1: rootURL + "/profilepics/" + response.data.filename + ""
 
         })
       })

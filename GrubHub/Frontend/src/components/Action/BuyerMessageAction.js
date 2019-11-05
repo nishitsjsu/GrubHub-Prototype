@@ -1,5 +1,6 @@
 import axios from 'axios';
 import rootURL from '../config';
+import setAuthorizationToken from '../../utils/setAuthorizationToken'
 export const SUCCESS_BSEND_MESSAGE = "succes_bsend_message";
 export const FAILURE_BSEND_MESSAGE = "failure_bsend_message";
 //traveler login action
@@ -17,6 +18,7 @@ function getError(response) {
 }
 function sendBuyerMessage_function(data) {
     console.log("Data in actions " + data)
+    setAuthorizationToken(localStorage.getItem('jwt'));
     return function (dispatch) {
         console.log("action data is", data);
         axios.defaults.withCredentials = true;

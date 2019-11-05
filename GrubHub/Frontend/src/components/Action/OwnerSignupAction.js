@@ -1,4 +1,5 @@
 import axios from 'axios';
+import rootURL from '../config';
 export const SUCCESS_OWNER_SIGNUP = "succes_owner_signup";
 export const FAILURE_OWNER_SIGNUP = "failure_owner_signup";
 //traveler login action
@@ -22,7 +23,7 @@ function ownerSignup_function(data) {
         console.log("action data is", data);
 
         axios.defaults.withCredentials = true;
-        axios.post("http://localhost:3001/ownersignup", data).then(response => {
+        axios.post(rootURL + "/ownersignup", data).then(response => {
             dispatch(
                 getSuccess(response)
             )

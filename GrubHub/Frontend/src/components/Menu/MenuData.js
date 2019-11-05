@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Redirect } from "react-router";
 import MenuDetails from "../Menu/MenuDetails";
 import cookie from "react-cookies";
+import rootURL from '../config';
 
 class MenuData extends Component {
     constructor(props) {
@@ -20,7 +21,7 @@ class MenuData extends Component {
 
 
     componentDidMount() {
-        axios.get('http://localhost:3001/sectiondetails', {
+        axios.get(rootURL + '/sectiondetails', {
             params: {
                 sectionid: this.props.data.sectionname,
                 idcookie: this.state.idcookie,

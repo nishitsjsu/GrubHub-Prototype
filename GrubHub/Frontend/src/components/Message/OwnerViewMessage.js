@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import ownermessageFetch_function from "../Action/OwnerViewMessageAction"
 import OrderData from "../Extra/OrderData";
 import Draggable from "react-draggable";
+import Pagination from "../Pagination"
 
 class OwnerViewMessage extends Component {
     constructor(props) {
@@ -16,6 +17,8 @@ class OwnerViewMessage extends Component {
             authFlag: false,
             orders: [],
             emailcookie: cookie.load("email"),
+            currenPage: 1,
+            sectionsPerPage: 1,
             activeDrags: 0,
             deltaPosition: {
                 x: 0, y: 0
@@ -118,11 +121,21 @@ class OwnerViewMessage extends Component {
 
     render() {
 
+        const indexOfLastSection = this.state.currenPage * this.state.sectionsPerPage;
+        const indexOfFirstSection = indexOfLastSection - this.state.sectionsPerPage;
+        const currenSections = this.state.orders.slice(indexOfFirstSection, indexOfLastSection);
+
+        const paginate = (pageNumber) => {
+            this.setState({
+                currenPage: pageNumber
+            })
+        }
+
         const dragHandlers = { onStart: this.onStart, onStop: this.onStop };
         const { deltaPosition, controlledPosition } = this.state;
 
         //iterate over orders to create a table row
-        let details = this.state.orders.map(order => {
+        let details = currenSections.map(order => {
             return (
                 // <tr>
                 //     <OrderData key={Math.random} data={order}></OrderData>
@@ -161,6 +174,7 @@ class OwnerViewMessage extends Component {
                             {details}
                         </tbody>
                     </table>
+                    <Pagination postsPerPage={this.state.sectionsPerPage} totalPosts={this.state.orders.length} paginate={paginate} />
                 </div>
 
             </div>

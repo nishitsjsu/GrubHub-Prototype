@@ -5,6 +5,7 @@ import cookie from "react-cookies";
 import { Redirect } from "react-router";
 import { connect } from "react-redux";
 import addItem_function from "../Action/AddItemAction";
+import rootURL from '../config';
 // import { threadId } from "worker_threads";
 
 //Define a Login Component
@@ -19,7 +20,7 @@ class AddItem extends Component {
             description: "",
             price: "",
             sectionid: this.props.match.params.sectionid,
-            imagePath: "http://localhost:3001/profilepics/def.png",
+            imagePath: rootURL + "/profilepics/def.png",
             itemimage: "",
             idcookie: cookie.load("id"),
             emailcookie: cookie.load("email"),
@@ -151,12 +152,12 @@ class AddItem extends Component {
             }
         }
         axios
-            .post('http://localhost:3001/additemuploadimage', formData, config)
+            .post(rootURL + '/additemuploadimage', formData, config)
             .then(response => {
                 console.log('The file is successfully uploaded')
                 console.log(response.data.filename)
                 this.setState({
-                    imagePath: "http://localhost:3001/profilepics/" + response.data.filename + "",
+                    imagePath: rootURL + "/profilepics/" + response.data.filename + "",
                     itemimage: response.data.filename
 
                 })

@@ -3,7 +3,9 @@ import "../../App.css";
 import axios from 'axios';
 import { Link } from "react-router-dom";
 import { Redirect } from "react-router";
+import rootURL from '../config';
 import BuyerMenuDetails from "../Menu/BuyerMenuDetails";
+import setAuthorizationToken from '../../utils/setAuthorizationToken'
 
 class MenuData extends Component {
     constructor(props) {
@@ -18,7 +20,8 @@ class MenuData extends Component {
 
 
     componentDidMount() {
-        axios.get('http://localhost:3001/sectiondetailsbuyer', {
+        setAuthorizationToken(localStorage.getItem('jwt'));
+        axios.get(rootURL + '/sectiondetailsbuyer', {
             params: {
                 sectionname: this.state.sectionname,
                 ownername: this.state.ownername,

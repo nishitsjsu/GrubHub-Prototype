@@ -41,7 +41,7 @@ const kafka = require('../kafka/client');
 // });
 
 
-router.get("/viewrestaurants", function (req, res) {
+router.get("/viewrestaurants", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside viewrestaurants");
 
     kafka.make_request('viewrestaurants', req.query, function (err, results) {
@@ -118,7 +118,7 @@ router.get("/viewrestaurants", function (req, res) {
 //     });
 // });
 
-router.get("/buyersection", function (req, res) {
+router.get("/buyersection", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside BuyerSection");
 
     kafka.make_request('buyersection', req.query, function (err, results) {
@@ -198,7 +198,7 @@ router.get("/buyersection", function (req, res) {
 // });
 
 
-router.get("/sectiondetailsbuyer", function (req, res) {
+router.get("/sectiondetailsbuyer", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside Section Details buyer");
 
     kafka.make_request('sectiondetailsbuyer', req.query, function (err, results) {
@@ -279,7 +279,7 @@ router.get("/sectiondetailsbuyer", function (req, res) {
 //     });
 // });
 
-router.post("/addtocart", function (req, res) {
+router.post("/addtocart", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside Add to cart Request");
     console.log("Req Body : ", req.body);
 
@@ -376,7 +376,7 @@ router.post("/addtocart", function (req, res) {
 // });
 
 
-router.get("/viewcart", function (req, res) {
+router.get("/viewcart", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside View Cart");
 
     kafka.make_request('viewcart', req.query, function (err, results) {
@@ -461,7 +461,7 @@ router.get("/viewcart", function (req, res) {
 // });
 
 
-router.get("/calculateSum", function (req, res) {
+router.get("/calculateSum", passport.authenticate("jwt", { session: false }), function (req, res) {
 
     kafka.make_request('calculateSum', req.query, function (err, results) {
         console.log('in result');
@@ -547,7 +547,7 @@ router.get("/calculateSum", function (req, res) {
 
 
 
-router.get("/cartitems", function (req, res) {
+router.get("/cartitems", passport.authenticate("jwt", { session: false }), function (req, res) {
 
     kafka.make_request('cartitems', req.query, function (err, results) {
         console.log('in result');
@@ -722,7 +722,7 @@ router.get("/cartitems", function (req, res) {
 // });
 
 
-router.post("/placeorder", function (req, res) {
+router.post("/placeorder", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside place order Request");
     console.log("Req Body : ", req.body);
 
@@ -864,7 +864,7 @@ router.post("/placeorder", function (req, res) {
 // });
 
 
-router.get("/buyerpastorders", function (req, res) {
+router.get("/buyerpastorders", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside buyerpastorders");
 
     kafka.make_request('buyerpastorders', req.query, function (err, results) {
@@ -941,7 +941,7 @@ router.get("/buyerpastorders", function (req, res) {
 // });
 
 
-router.get("/buyerfutureorders", function (req, res) {
+router.get("/buyerfutureorders", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside buyerfutureorders ");
 
     kafka.make_request('buyerfutureorders', req.query, function (err, results) {
@@ -991,7 +991,7 @@ router.get("/buyerfutureorders", function (req, res) {
 
 //-------new functionality
 
-router.get("/buyerviewmessage", function (req, res) {
+router.get("/buyerviewmessage", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside buyerviewmessage ");
 
     kafka.make_request('buyerviewmessage', req.query, function (err, results) {
@@ -1040,7 +1040,7 @@ router.get("/buyerviewmessage", function (req, res) {
 });
 
 
-router.post("/buyermessage", function (req, res) {
+router.post("/buyermessage", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside Add Section Request");
     console.log("Req Body : ", req.body);
 

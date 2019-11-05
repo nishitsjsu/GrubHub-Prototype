@@ -3,6 +3,7 @@ import "../Profile/op.css";
 import axios from "axios";
 import cookie from "react-cookies";
 import { Redirect } from "react-router";
+import rootURL from '../config';
 
 //Define a Login Component
 class AddSection extends Component {
@@ -50,7 +51,7 @@ class AddSection extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post("http://localhost:3001/addsection", data).then(response => {
+        axios.post(rootURL + "/addsection", data).then(response => {
             console.log("Status Code : ", response.status);
             if (response.status === 200) {
                 console.log("Item added successfully")

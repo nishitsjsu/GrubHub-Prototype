@@ -1,4 +1,5 @@
 import axios from 'axios';
+import rootURL from '../config';
 export const SUCCESS_LOGIN = "succes_login";
 export const FAILURE_LOGIN = "failure_login";
 //traveler login action
@@ -19,7 +20,7 @@ function login_function(data) {
     return function (dispatch) {
         console.log("action data is", data);
         axios.defaults.withCredentials = true;
-        axios.post("http://localhost:3001/login", data).then(response => {
+        axios.post(rootURL + "/login", data).then(response => {
             dispatch(
                 getSuccess(response)
             )

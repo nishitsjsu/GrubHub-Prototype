@@ -4,7 +4,10 @@ import axios from 'axios';
 import cookie from "react-cookies";
 import { Link } from "react-router-dom";
 import { Redirect } from "react-router";
+import { connect } from "react-redux";
+import addtocart_function from "../Action/AddToCartAction"
 import MenuData from "../Menu/MenuData";
+import rootURL from '../config';
 
 class MenuDetails extends Component {
     constructor(props) {
@@ -16,14 +19,30 @@ class MenuDetails extends Component {
             itemdescription: this.props.data.description,
             itemprice: this.props.data.price,
             idcookie: cookie.load("id"),
-            image: "http://localhost:3001/profilepics/" + this.props.data.itemimage + "",
+            image: rootURL + "/profilepics/" + this.props.data.itemimage + "",
             quantity: "",
             owneremail: this.props.data.owneremail,
             restaurant: this.props.data.restaurantname,
-            emailcookie: cookie.load("email")
+            emailcookie: cookie.load("email"),
+            authFlag: false,
         }
         this.submitAdd = this.submitAdd.bind(this);
         this.quantityChangeHandler = this.quantityChangeHandler.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+
+        console.log("in will recieve props for details", nextProps);
+        this.setState({
+            authFlag: nextProps.authFlag,
+        })
+    }
+
+    //Call the Will Mount to set the auth Flag to false
+    componentDidMount() {
+        this.setState({
+            authFlag: false
+        });
     }
 
     quantityChangeHandler = e => {
@@ -47,23 +66,25 @@ class MenuDetails extends Component {
             restaurant: this.state.restaurant
         };
         //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post("http://localhost:3001/addtocart", data).then(response => {
-            console.log("Status Code : ", response.status);
-            if (response.status === 200) {
-                console.log(response)
-                this.setState({
-                    authFlag: true
-                });
-                window.location.reload();
+        // axios.defaults.withCredentials = true;
+        // //make a post request with the user data
+        // axios.post("http://localhost:3001/addtocart", data).then(response => {
+        //     console.log("Status Code : ", response.status);
+        //     if (response.status === 200) {
+        //         console.log(response)
+        //         this.setState({
+        //             authFlag: true
+        //         });
+        //         window.location.reload();
 
-            } else {
-                this.setState({
-                    authFlag: false
-                });
-            }
-        });
+        //     } else {
+        //         this.setState({
+        //             authFlag: false
+        //         });
+        //     }
+        // });
+
+        this.props.addtocart_function(data);
     };
 
 
@@ -81,9 +102,15 @@ class MenuDetails extends Component {
         //         </div>
         //     )
         // })
+        var redirectVar = null;
+        if (this.state.authFlag) {
+            redirectVar = window.location.reload();
+        }
 
         return (
+
             <Fragment>
+                {redirectVar}
                 <td>{this.props.data.name}</td>
                 <td style={{ width: "20%" }}><img style={{ width: "50%", height: "20%" }} src={this.state.image} /></td>
                 <td>{this.props.data.description}</td>
@@ -95,4 +122,24 @@ class MenuDetails extends Component {
     }
 }
 
-export default MenuDetails;
+// export default MenuDetails;
+
+function mapStateToProps(state) {
+    console.log("in map state login", state);
+    return {
+        authFlag: state.BuyerMessageReducer.authFlag,
+        // invalidFlag: state.LoginReducer.invalidFlag
+    };
+}
+
+const mapDispachToProps = dispatch => {
+    return {
+        addtocart_function: (data) => dispatch(addtocart_function(data)),
+
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispachToProps
+)(MenuDetails);

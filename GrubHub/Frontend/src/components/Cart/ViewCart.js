@@ -2,8 +2,12 @@ import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
 import cookie from 'react-cookies';
+import { connect } from "react-redux";
+import viewcartFetch_function from "../Action/ViewCartAction"
 import { Link } from "react-router-dom";
 import { Redirect } from 'react-router';
+import rootURL from '../config';
+import setAuthorizationToken from '../../utils/setAuthorizationToken'
 
 class ViewCart extends Component {
     constructor() {
@@ -21,6 +25,22 @@ class ViewCart extends Component {
         this.addressChangeHandler = this.addressChangeHandler.bind(this)
     }
 
+    componentWillReceiveProps(nextProps) {
+
+        console.log("in will recieve props for details", nextProps);
+        this.setState({
+            authFlag: nextProps.authFlag,
+            items: nextProps.items,
+        })
+    }
+
+    //Call the Will Mount to set the auth Flag to false
+    componentWillMount() {
+        this.setState({
+            authFlag: false
+        });
+    }
+
     addressChangeHandler = e => {
         this.setState({
             address: e.target.value
@@ -29,21 +49,23 @@ class ViewCart extends Component {
 
     //get the items data from backend  
     componentDidMount() {
-        axios.get('http://localhost:3001/viewcart', {
-            params: {
-                idcookie: this.state.idcookie,
-                emailcookie: this.state.emailcookie
-            }
-        })
-            .then((response) => {
-                console.log(response)
-                //update the state with the response data
-                this.setState({
-                    items: this.state.items.concat(response.data)
-                });
-            });
-
-        axios.get('http://localhost:3001/calculateSum', {
+        var emailcookie = this.state.emailcookie;
+        this.props.viewcartFetch_function(emailcookie)
+        // axios.get('http://localhost:3001/viewcart', {
+        //     params: {
+        //         idcookie: this.state.idcookie,
+        //         emailcookie: this.state.emailcookie
+        //     }
+        // })
+        //     .then((response) => {
+        //         console.log(response)
+        //         //update the state with the response data
+        //         this.setState({
+        //             items: this.state.items.concat(response.data)
+        //         });
+        //     });
+        setAuthorizationToken(localStorage.getItem('jwt'));
+        axios.get(rootURL + '/calculateSum', {
             params: {
                 idcookie: this.state.idcookie,
                 emailcookie: this.state.emailcookie
@@ -77,7 +99,8 @@ class ViewCart extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post("http://localhost:3001/placeorder", data).then(response => {
+        setAuthorizationToken(localStorage.getItem('jwt'));
+        axios.post(rootURL + "/placeorder", data).then(response => {
             console.log("Status Code : ", response.status);
             if (response.status === 200) {
                 console.log("Order placed successfully")
@@ -155,4 +178,26 @@ class ViewCart extends Component {
     }
 }
 //export ViewCart Component
-export default ViewCart;
+// export default ViewCart;
+
+
+function mapStateToProps(state) {
+    console.log("in map state traveler_propfile", state);
+    return {
+
+        items: state.ViewCartReducer.items,
+        authFlag: state.ViewCartReducer.authFlag,
+
+    };
+}
+
+const mapDispachToProps = dispatch => {
+    return {
+        viewcartFetch_function: (emailcookie) => dispatch(viewcartFetch_function(emailcookie)),
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispachToProps
+)(ViewCart);

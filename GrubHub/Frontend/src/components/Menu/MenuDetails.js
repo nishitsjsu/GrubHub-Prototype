@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import "../../App.css";
 import { Link } from "react-router-dom";
+import rootURL from '../config';
 import { Redirect } from "react-router";
 import MenuData from "../Menu/MenuData";
 
@@ -8,7 +9,7 @@ class MenuDetails extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            image: "http://localhost:3001/profilepics/" + this.props.data.itemimage + "",
+            image: rootURL + "/profilepics/" + this.props.data.itemimage + "",
         }
         this.viewButton = this.viewButton.bind(this);
     }

@@ -4,6 +4,8 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import { Link } from "react-router-dom";
 import { Redirect } from 'react-router';
+import { connect } from "react-redux";
+import buyermenuFetch_function from "../Action/BuyerMenuAction"
 import BuyerMenuData from "../Menu/BuyerMenuData"
 
 class BuyerMenu extends Component {
@@ -13,21 +15,42 @@ class BuyerMenu extends Component {
             sections: []
         }
     }
+
+
+    componentWillReceiveProps(nextProps) {
+
+        console.log("in will recieve props for details", nextProps);
+        this.setState({
+            authFlag: nextProps.authFlag,
+            sections: nextProps.sections,
+        })
+    }
+
+    //Call the Will Mount to set the auth Flag to false
+    componentWillMount() {
+        this.setState({
+            authFlag: false
+        });
+    }
+
+
     //get the books data from backend  
     componentDidMount() {
-        axios.get('http://localhost:3001/buyersection', {
-            params: {
-                restaurantid: this.props.match.params.restaurantid
-            }
-        })
-            .then((response) => {
-                console.log("Received response")
-                //update the state with the response data
-                this.setState({
+        var restaurantid = this.props.match.params.restaurantid;
+        // axios.get('http://localhost:3001/buyersection', {
+        //     params: {
+        //         restaurantid: this.props.match.params.restaurantid
+        //     }
+        // })
+        //     .then((response) => {
+        //         console.log("Received response")
+        //         //update the state with the response data
+        //         this.setState({
 
-                    sections: this.state.sections.concat(response.data)
-                });
-            });
+        //             sections: this.state.sections.concat(response.data)
+        //         });
+        //     });
+        this.props.buyermenuFetch_function(restaurantid);
     }
 
     render() {
@@ -83,4 +106,27 @@ class BuyerMenu extends Component {
     }
 }
 //export Home Component
-export default BuyerMenu;
+// export default BuyerMenu;
+
+function mapStateToProps(state) {
+    console.log("in map state traveler_propfile", state);
+    return {
+
+        sections: state.BuyerMenuReducer.sections,
+        authFlag: state.BuyerMenuReducer.authFlag,
+
+    };
+}
+
+const mapDispachToProps = dispatch => {
+    return {
+        buyermenuFetch_function: (itemname) => dispatch(buyermenuFetch_function(itemname)),
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispachToProps
+)(BuyerMenu);
+
+

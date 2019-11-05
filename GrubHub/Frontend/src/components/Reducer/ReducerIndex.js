@@ -19,6 +19,12 @@ import BuyerMessageViewReducer from "./BuyerMessageViewReducer";
 import BuyerMessageReducer from "./BuyerMessageReducer";
 import OwnerMessageViewReducer from "./OwnerMessageViewReducer";
 import OwnerOldOrdersReducer from "./OwnerOldOrdersReducer";
+import ViewRestaurantsReducer from "./ViewRestaurantsReducer";
+import BuyerMenuReducer from "./BuyerMenuReducer";
+import AddToCartReducer from "./AddToCartReducer";
+import ViewCartReducer from "./ViewCartReducer";
+import BuyerFutureOrdersReducer from "./BuyerFutureOrdersReducer";
+
 
 const rootReducer = combineReducers({
     LoginReducer: LoginReducer,
@@ -41,6 +47,11 @@ const rootReducer = combineReducers({
     BuyerMessageReducer: BuyerMessageReducer,
     OwnerMessageViewReducer: OwnerMessageViewReducer,
     OwnerOldOrdersReducer: OwnerOldOrdersReducer,
+    ViewRestaurantsReducer: ViewRestaurantsReducer,
+    BuyerMenuReducer: BuyerMenuReducer,
+    AddToCartReducer: AddToCartReducer,
+    ViewCartReducer: ViewCartReducer,
+    BuyerFutureOrdersReducer: BuyerFutureOrdersReducer,
 })
 
 export default rootReducer

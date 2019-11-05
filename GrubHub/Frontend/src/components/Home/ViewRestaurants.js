@@ -4,9 +4,12 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import { Link } from "react-router-dom";
 import { Redirect } from 'react-router';
+import { connect } from "react-redux";
+import viewrestaurantsFetch_function from "../Action/ViewRestaurantsAction"
 import ViewRestaurantsData from "../Extra/ViewRestaurantsData"
+import Pagination from "../Pagination"
 
-class BuyerHome extends Component {
+class ViewRestaurants extends Component {
 
     constructor(props) {
         //Call the constrictor of Super class i.e The Component
@@ -21,7 +24,9 @@ class BuyerHome extends Component {
             // sectionid: this.props.match.params.sectionid,
             // imagePath: "http://localhost:3001/profilepics/d.jpeg",
             // itemimage: "",
-            authFlag: false
+            authFlag: false,
+            currenPage: 1,
+            sectionsPerPage: 1,
         };
         //Bind the handlers to this class
         this.itemnameChangeHandler = this.itemnameChangeHandler.bind(this);
@@ -29,6 +34,24 @@ class BuyerHome extends Component {
         this.selectChangeHandler = this.selectChangeHandler.bind(this);
         //this.submitSearch = this.submitSearch.bind(this);
     }
+
+
+    componentWillReceiveProps(nextProps) {
+
+        console.log("in will recieve props for details", nextProps);
+        this.setState({
+            authFlag: nextProps.authFlag,
+            items: nextProps.items,
+        })
+    }
+
+    //Call the Will Mount to set the auth Flag to false
+    componentWillMount() {
+        this.setState({
+            authFlag: false
+        });
+    }
+
 
     selectChangeHandler = e => {
         this.setState({
@@ -47,20 +70,22 @@ class BuyerHome extends Component {
 
     componentDidMount() {
         console.log("Cuisine " + this.state.cuisine)
-        axios.get('http://localhost:3001/viewrestaurants', {
-            params: {
-                itemname: this.props.match.params.itemname,
-                // cuisine: this.state.cuisine
-            }
-        })
-            .then((response) => {
-                console.log("Received response")
-                //update the state with the response data
-                this.setState({
+        var itemname = this.props.match.params.itemname;
+        // axios.get('http://localhost:3001/viewrestaurants', {
+        //     params: {
+        //         itemname: this.props.match.params.itemname,
+        //         // cuisine: this.state.cuisine
+        //     }
+        // })
+        //     .then((response) => {
+        //         console.log("Received response")
+        //         //update the state with the response data
+        //         this.setState({
 
-                    items: this.state.items.concat(response.data)
-                });
-            });
+        //             items: this.state.items.concat(response.data)
+        //         });
+        //     });
+        this.props.viewrestaurantsFetch_function(itemname);
     }
 
 
@@ -69,10 +94,23 @@ class BuyerHome extends Component {
     };
 
     render() {
+
+
         let predetails = this.state.items.filter((item) => {
             return item.cuisine.indexOf(this.state.search) != -1
         })
-        let details = predetails.map(item => {
+
+        const indexOfLastSection = this.state.currenPage * this.state.sectionsPerPage;
+        const indexOfFirstSection = indexOfLastSection - this.state.sectionsPerPage;
+        const currenSections = predetails.slice(indexOfFirstSection, indexOfLastSection);
+
+        const paginate = (pageNumber) => {
+            this.setState({
+                currenPage: pageNumber
+            })
+        }
+
+        let details = currenSections.map(item => {
             return (
                 <tr>
                     <ViewRestaurantsData key={Math.random} data={item}></ViewRestaurantsData>
@@ -126,7 +164,7 @@ class BuyerHome extends Component {
 
                     <input type="text" placeholder="Type here to filter content based on cuisine" onChange={this.selectChangeHandler}></input>
 
-
+                    <Pagination postsPerPage={this.state.sectionsPerPage} totalPosts={predetails.length} paginate={paginate} />
 
 
                 </div>
@@ -137,4 +175,28 @@ class BuyerHome extends Component {
 }
 
 
-export default BuyerHome;
+// export default BuyerHome;
+
+
+function mapStateToProps(state) {
+    console.log("in map state traveler_propfile", state);
+    return {
+
+        items: state.ViewRestaurantsReducer.items,
+        authFlag: state.ViewRestaurantsReducer.authFlag,
+
+    };
+}
+
+const mapDispachToProps = dispatch => {
+    return {
+        viewrestaurantsFetch_function: (itemname) => dispatch(viewrestaurantsFetch_function(itemname)),
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispachToProps
+)(ViewRestaurants);
+
+

@@ -637,7 +637,7 @@ router.post("/ownerprofile", function (req, res) {
 // });
 
 
-router.post("/buyerprofile", function (req, res) {
+router.post("/buyerprofile", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside update buyer profile Request");
     console.log("Req Body : ", req.body);
 
@@ -965,7 +965,7 @@ router.get("/buyerprofile", passport.authenticate("jwt", { session: false }), fu
 //     })
 // })
 
-router.post('/buyerprofileuploadimage', function (req, res) {
+router.post('/buyerprofileuploadimage', passport.authenticate("jwt", { session: false }), function (req, res) {
     upload(req, res, err => {
         if (err) {
             res.writeHead(400, {

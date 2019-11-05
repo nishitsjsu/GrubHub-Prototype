@@ -4,6 +4,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { Redirect } from "react-router";
 import SectionDetails from "../Sections/SectionDetails";
+import rootURL from '../config';
 // import { Z_BLOCK } from "zlib";
 
 class SectionDetailsData extends Component {
@@ -14,8 +15,8 @@ class SectionDetailsData extends Component {
             description: this.props.data.description,
             price: this.props.data.price,
             itemid: this.props.data._id,
-            image: "http://localhost:3001/profilepics/" + this.props.data.itemimage + "",
-            image1: "http://localhost:3001/profilepics/d.jpeg",
+            image: rootURL + "/profilepics/" + this.props.data.itemimage + "",
+            image1: rootURL + "/profilepics/d.jpeg",
             authFlag: false
         }
         this.submitUpdate = this.submitUpdate.bind(this);
@@ -58,7 +59,7 @@ class SectionDetailsData extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post("http://localhost:3001/updatesectionitems", data).then(response => {
+        axios.post(rootURL + "/updatesectionitems", data).then(response => {
             console.log("Status Code : ", response.status);
             if (response.status === 200) {
                 this.setState({
@@ -85,7 +86,7 @@ class SectionDetailsData extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post("http://localhost:3001/deletesectionitems", data).then(response => {
+        axios.post(rootURL + "/deletesectionitems", data).then(response => {
             console.log("Status Code : ", response.status);
             if (response.status === 200) {
 

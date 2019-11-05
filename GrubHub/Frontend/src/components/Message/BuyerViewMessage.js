@@ -7,6 +7,7 @@ import { Redirect } from 'react-router';
 import { connect } from "react-redux";
 import buyermessageFetch_function from "../Action/BuyerViewMessageAction"
 import OrderData from "../Extra/OrderData"
+import Pagination from "../Pagination"
 
 class BuyerViewMessage extends Component {
     constructor(props) {
@@ -15,6 +16,8 @@ class BuyerViewMessage extends Component {
             authFlag: false,
             orders: [],
             emailcookie: cookie.load("email"),
+            currenPage: 1,
+            sectionsPerPage: 2,
         }
     }
 
@@ -62,8 +65,18 @@ class BuyerViewMessage extends Component {
 
 
     render() {
+
+        const indexOfLastSection = this.state.currenPage * this.state.sectionsPerPage;
+        const indexOfFirstSection = indexOfLastSection - this.state.sectionsPerPage;
+        const currenSections = this.state.orders.slice(indexOfFirstSection, indexOfLastSection);
+
+        const paginate = (pageNumber) => {
+            this.setState({
+                currenPage: pageNumber
+            })
+        }
         //iterate over orders to create a table row
-        let details = this.state.orders.map(order => {
+        let details = currenSections.map(order => {
             return (
                 // <tr>
                 //     <OrderData key={Math.random} data={order}></OrderData>
@@ -99,6 +112,7 @@ class BuyerViewMessage extends Component {
                             {details}
                         </tbody>
                     </table>
+                    <Pagination postsPerPage={this.state.sectionsPerPage} totalPosts={this.state.orders.length} paginate={paginate} />
                 </div>
 
             </div>

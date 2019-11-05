@@ -5,6 +5,7 @@ import cookie from 'react-cookies';
 import { Link } from "react-router-dom";
 import { Redirect } from 'react-router';
 import MenuData from "../Menu/MenuData"
+import rootURL from '../config';
 
 class OwnerMenu extends Component {
     constructor(props) {
@@ -18,7 +19,7 @@ class OwnerMenu extends Component {
     }
     //get the books data from backend  
     componentDidMount() {
-        axios.get('http://localhost:3001/ownersection', {
+        axios.get(rootURL + '/ownersection', {
             params: {
                 sectionid: this.props.match.params.sectionid,
                 idcookie: this.state.idcookie,

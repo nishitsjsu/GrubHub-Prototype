@@ -1,29 +1,27 @@
 import axios from 'axios';
 import rootURL from '../config';
-import setAuthorizationToken from '../../utils/setAuthorizationToken'
-export const SUCCESS_BUYER_MESSAGE_FETCH = "succes_buyer_message_fetch";
-export const FAILURE_BUYER_MESSAGE_FETCH = "failure_buyer_message_fetch";
+export const SUCCESS_FUTURE_ORDERS_FETCH = "succes_future_orders_fetch";
+export const FAILURE_FUTURE_ORDERS_FETCH = "failure_future_orders_fetch";
 
 //traveler login action
 function getSuccess(response) {
     return {
-        type: SUCCESS_BUYER_MESSAGE_FETCH,
+        type: SUCCESS_FUTURE_ORDERS_FETCH,
         payload: response
     }
 }
 function getError(response) {
     return {
-        type: FAILURE_BUYER_MESSAGE_FETCH,
+        type: FAILURE_FUTURE_ORDERS_FETCH,
         payload: response
     }
 }
-function buyermessageFetch_function(emailcookie) {
+function buyerfutureordersFetch_function(emailcookie) {
     console.log("Data in data fecth function ")
-    setAuthorizationToken(localStorage.getItem('jwt'));
     return function (dispatch) {
         console.log("action data is");
         axios.defaults.withCredentials = true;
-        axios.get(rootURL + '/buyerviewmessage', {
+        axios.get(rootURL + '/buyerfutureorders', {
             params: {
                 emailcookie: emailcookie
             }
@@ -36,4 +34,4 @@ function buyermessageFetch_function(emailcookie) {
         })
     }
 }
-export default buyermessageFetch_function;
+export default buyerfutureordersFetch_function;

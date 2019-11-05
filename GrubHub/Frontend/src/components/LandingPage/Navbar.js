@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import cookie from "react-cookies";
 import axios from 'axios';
 import { Redirect } from "react-router";
+import setAuthorizationToken from '../../utils/setAuthorizationToken'
+import rootURL from '../config';
 
 //create the Navbar Component
 class Navbar extends Component {
@@ -18,7 +20,8 @@ class Navbar extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3001/cartitems', {
+    setAuthorizationToken(localStorage.getItem('jwt'));
+    axios.get(rootURL + '/cartitems', {
       params: {
         idcookie: this.state.idcookie,
         emailcookie: this.state.emailcookie

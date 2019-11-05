@@ -1,33 +1,28 @@
 import axios from 'axios';
 import rootURL from '../config';
 import setAuthorizationToken from '../../utils/setAuthorizationToken'
-export const SUCCESS_BUYER_MESSAGE_FETCH = "succes_buyer_message_fetch";
-export const FAILURE_BUYER_MESSAGE_FETCH = "failure_buyer_message_fetch";
-
+export const SUCCESS_ADDTOCART = "succes_addtocart";
+export const FAILURE_ADDTOCART = "failure_addtocart";
 //traveler login action
 function getSuccess(response) {
     return {
-        type: SUCCESS_BUYER_MESSAGE_FETCH,
+        type: SUCCESS_ADDTOCART,
         payload: response
     }
 }
 function getError(response) {
     return {
-        type: FAILURE_BUYER_MESSAGE_FETCH,
+        type: FAILURE_ADDTOCART,
         payload: response
     }
 }
-function buyermessageFetch_function(emailcookie) {
-    console.log("Data in data fecth function ")
+function addtocart_function(data) {
+    console.log("Data in actions " + data)
     setAuthorizationToken(localStorage.getItem('jwt'));
     return function (dispatch) {
-        console.log("action data is");
+        console.log("action data is", data);
         axios.defaults.withCredentials = true;
-        axios.get(rootURL + '/buyerviewmessage', {
-            params: {
-                emailcookie: emailcookie
-            }
-        }).then(response => {
+        axios.post(rootURL + "/addtocart", data).then(response => {
             dispatch(
                 getSuccess(response)
             )
@@ -36,4 +31,4 @@ function buyermessageFetch_function(emailcookie) {
         })
     }
 }
-export default buyermessageFetch_function;
+export default addtocart_function;
