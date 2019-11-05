@@ -15,7 +15,8 @@ require("./mongoose");
 var kafka = require('./kafka/client');
 
 //use cors to allow cross origin resource sharing
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+// app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({ origin: "13.58.80.223:3000", credentials: true }));
 app.use(passport.initialize());
 
 
@@ -41,7 +42,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //Allow Access Control
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  // res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Origin", "13.58.80.223:3000");
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Methods",
