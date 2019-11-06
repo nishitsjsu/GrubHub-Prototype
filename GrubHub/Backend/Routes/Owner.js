@@ -17,33 +17,6 @@ const passport = require("passport");
 require('../config/passport')(passport)
 app.use(passport.initialize());
 
-// router.get("/ownerhome", function (req, res) {
-//     console.log("Inside OwnerHome");
-
-//     sql = `select * from orders where ownerid=${req.query.idcookie} and status NOT IN ('Delivered','Cancel')`;
-//     console.log("SQL: " + sql);
-
-//     pool.getConnection(function (err, db) {
-//         if (err) {
-//             console.log("Error while getting connection")
-//         }
-//         db.query(sql, (err, result) => {
-//             if (err) {
-//                 console.log("Error occured : " + err);
-//             } else {
-//                 console.log("Inside 200 response")
-//                 res.writeHead(200, {
-//                     "Content-Type": "text/plain"
-//                 });
-//                 //console.log(JSON.stringify(resultObject))
-//                 res.end(JSON.stringify(result));
-//             }
-//         });
-//         db.release()
-//     });
-// });
-
-
 router.get("/ownerhome", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside OwnerHome");
 
@@ -73,52 +46,7 @@ router.get("/ownerhome", passport.authenticate("jwt", { session: false }), funct
         }
 
     });
-
-    // emailcookie = req.query.emailcookie;
-    // Order.find({ owneremail: emailcookie, status: { $nin: ["Delivered", "Cancel"] } }).then((doc) => {
-    //     console.log("ownerhome success!" + doc)
-    //     res.writeHead(200, {
-    //         "Content-Type": "text/plain"
-    //     });
-    //     res.end(JSON.stringify(doc));
-    // }).catch((err) => {
-    //     console.log("owner home fail! " + err)
-    //     res.writeHead(400, {
-    //         "Content-Type": "text/plain"
-    //     });
-    //     //console.log(JSON.stringify(resultObject))
-    //     res.end("ownerhome fail");
-    // })
 });
-
-
-// router.get("/orderitemdetails", function (req, res) {
-//     console.log("Inside orderitemdetails");
-
-//     sql = `select * from orderdetails where orderid =${req.query.orderid} `;
-//     console.log("SQL: " + sql);
-
-//     pool.getConnection(function (err, db) {
-//         if (err) {
-//             console.log("Error while getting connection")
-//         }
-//         db.query(sql, (err, result) => {
-//             if (err) {
-//                 console.log("Error occured : " + err);
-//             } else {
-//                 console.log("Inside 200 response")
-//                 res.writeHead(200, {
-//                     "Content-Type": "text/plain"
-//                 });
-//                 console.log(JSON.stringify(result))
-//                 res.end(JSON.stringify(result));
-//             }
-//         });
-//         db.release()
-//     });
-
-
-// });
 
 
 router.get("/orderitemdetails", passport.authenticate("jwt", { session: false }), function (req, res) {
@@ -150,60 +78,7 @@ router.get("/orderitemdetails", passport.authenticate("jwt", { session: false })
         }
 
     });
-
-    //     Orderdetails.find({ orderid: req.query.orderid }).then((doc) => {
-    //         console.log("orderitemdetails success!" + doc)
-    //         res.writeHead(200, {
-    //             "Content-Type": "text/plain"
-    //         });
-    //         res.end(JSON.stringify(doc));
-    //     }).catch((err) => {
-    //         console.log("orderitemdetails fail! " + err)
-    //         res.writeHead(400, {
-    //             "Content-Type": "text/plain"
-    //         });
-    //         //console.log(JSON.stringify(resultObject))
-    //         res.end("orderitemdetails fail");
-    //     })
 });
-
-
-
-// router.post("/changestatus", function (req, res) {
-//     console.log("Inside changestatus Order Request");
-//     console.log("Req Body : ", req.body);
-
-//     var orderid = req.body.orderid;
-//     var status = req.body.status;
-
-//     // if (status === "New" || status === "Preparing" || status === "Ready" || status === "Delivered") {
-//     //   sql = `update orders set status='${status}' where orderid=${orderid}`;
-//     // } else if (status === "Cancel") {
-//     //   sql = `delete from orders where orderid=${orderid}`;
-//     // }
-
-//     sql = `update orders set status='${status}' where orderid=${orderid}`;
-
-//     //sql="Select name,email from " + radio + " where password="' + password + '";
-//     console.log("SQL: " + sql);
-
-//     pool.getConnection(function (err, db) {
-//         if (err) {
-//             console.log("Error while getting connection")
-//         }
-//         db.query(sql, (err, result) => {
-//             if (err) {
-//                 console.log("Error occured : " + err);
-//             } else {
-//                 res.writeHead(200, {
-//                     "Content-Type": "text/plain"
-//                 });
-//                 res.end("Successfully cancelled the order");
-//             }
-//         });
-//         db.release()
-//     });
-// });
 
 router.post("/changestatus", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside changestatus Order Request");
@@ -235,50 +110,7 @@ router.post("/changestatus", passport.authenticate("jwt", { session: false }), f
         }
 
     });
-
-    // var orderid = req.body.orderid;
-    // var status = req.body.status;
-
-    // Order.findOneAndUpdate({ _id: orderid }, { $set: { status: status } }, { new: true })
-    //     .then((doc) => {
-    //         console.log("update status success", doc);
-    //         res.writeHead(200, {
-    //             "Content-Type": "text/plain"
-    //         });
-    //         res.end("Successfully updated status");
-    //     }).catch((e) => {
-    //         res.writeHead(400, {
-    //             "Content-Type": "text/plain"
-    //         });
-    //         res.end("Unsuccessfully updated status");
-    //     })
 });
-
-// router.get("/ownersection", function (req, res) {
-//     console.log("Inside OwnerSection");
-
-//     sql = `select * from sections where ownerid=${req.query.idcookie}`
-//     console.log("SQL: " + sql);
-
-//     pool.getConnection(function (err, db) {
-//         if (err) {
-//             console.log("Error while getting connection")
-//         }
-//         db.query(sql, (err, result) => {
-//             if (err) {
-//                 console.log("Error occured : " + err);
-//             } else {
-//                 console.log("Inside 200 response")
-//                 res.writeHead(200, {
-//                     "Content-Type": "text/plain"
-//                 });
-//                 //console.log(JSON.stringify(resultObject))
-//                 res.end(JSON.stringify(result));
-//             }
-//         });
-//         db.release()
-//     });
-// });
 
 router.get("/ownersection", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside OwnerSection");
@@ -307,56 +139,8 @@ router.get("/ownersection", passport.authenticate("jwt", { session: false }), fu
                 res.end(results);
             }
         }
-
     });
-
-    // Section.find({ ownername: req.query.emailcookie }).then((doc) => {
-    //     console.log("Inside 200 response")
-    //     res.writeHead(200, {
-    //         "Content-Type": "text/plain"
-    //     });
-    //     //console.log(JSON.stringify(resultObject))
-    //     res.end(JSON.stringify(doc));
-    // }).catch((err) => {
-    //     console.log(err);
-    //     console.log("Inside 400 response")
-    //     res.writeHead(400, {
-    //         "Content-Type": "text/plain"
-    //     });
-    //     //console.log(JSON.stringify(resultObject))
-    //     res.end("Error in ownersection");
-    // });
 });
-
-
-// router.get("/sectiondetails", function (req, res) {
-//     console.log("Inside Section Details");
-
-//     sql = `select * from items where sectionid =${req.query.sectionid} and ownerid=${req.query.idcookie} `;
-//     console.log("SQL: " + sql);
-
-//     pool.getConnection(function (err, db) {
-//         if (err) {
-//             console.log("Error while getting connection")
-//         }
-//         db.query(sql, (err, result) => {
-//             if (err) {
-//                 console.log("Error occured : " + err);
-//             } else {
-//                 console.log("Inside 200 response")
-//                 res.writeHead(200, {
-//                     "Content-Type": "text/plain"
-//                 });
-//                 console.log(JSON.stringify(result))
-//                 res.end(JSON.stringify(result));
-//             }
-//         });
-//         db.release()
-//     });
-
-
-// });
-
 
 router.get("/sectiondetails", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside Section Details");
@@ -388,60 +172,7 @@ router.get("/sectiondetails", passport.authenticate("jwt", { session: false }), 
         }
 
     });
-
-
-    // Item.find({ owneremail: req.query.emailcookie, sectionname: req.query.sectionid }).then((doc) => {
-    //     console.log("success owner section details" + doc)
-    //     res.writeHead(200, {
-    //         "Content-Type": "text/plain"
-    //     });
-    //     //console.log(JSON.stringify(resultObject))
-    //     res.end(JSON.stringify(doc));
-    // }).catch((err) => {
-    //     console.log(err);
-    //     console.log("Inside 400 response")
-    //     res.writeHead(400, {
-    //         "Content-Type": "text/plain"
-    //     });
-    //     //console.log(JSON.stringify(resultObject))
-    //     res.end("Error in ownersection details");
-    // });
 });
-
-
-
-
-// router.post("/updatesectionitems", function (req, res) {
-//     console.log("Inside update section items Request");
-//     console.log("Req Body : ", req.body);
-
-//     var name = req.body.name;
-//     var description = req.body.description;
-//     var price = req.body.price;
-//     var itemid = req.body.itemid
-
-//     sql = `update items set name='${name}',description='${description}',price='${price}' where itemid='${itemid}'`;
-//     //sql="Select name,email from " + radio + " where password="' + password + '";
-//     console.log("SQL: " + sql);
-
-//     pool.getConnection(function (err, db) {
-//         if (err) {
-//             console.log("Error while getting connection")
-//         }
-//         db.query(sql, (err, result) => {
-//             if (err) {
-//                 console.log("Error occured : " + err);
-//             } else {
-//                 res.writeHead(200, {
-//                     "Content-Type": "text/plain"
-//                 });
-//                 res.end("Successfully updated section items");
-//             }
-//         });
-//         db.release()
-//     });
-// });
-
 
 router.post("/updatesectionitems", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside update section items Request");
@@ -473,60 +204,7 @@ router.post("/updatesectionitems", passport.authenticate("jwt", { session: false
         }
 
     });
-
-    // var name = req.body.name;
-    // var description = req.body.description;
-    // var price = req.body.price;
-    // var itemid = req.body.itemid
-
-    // Item.findOneAndUpdate({ _id: itemid }, { $set: { name: name, description: description, price: price } }, { new: true })
-    //     .then((doc) => {
-    //         console.log("update item success", doc);
-    //         res.writeHead(200, {
-    //             "Content-Type": "text/plain"
-    //         });
-    //         res.end("Successfully updated item");
-    //     }).catch((e) => {
-    //         res.writeHead(400, {
-    //             "Content-Type": "text/plain"
-    //         });
-    //         res.end("Unsuccessfully updated item");
-    //     })
 });
-
-// router.post("/additem", function (req, res) {
-//     console.log("Inside additem Request");
-//     console.log("Req Body : ", req.body);
-
-//     var itemname = req.body.itemname;
-//     var description = req.body.description;
-//     var price = req.body.price;
-//     var sectionid = req.body.sectionid;
-//     var itemimage = req.body.itemimage;
-//     var idcookie = req.body.idcookie
-
-//     //sql = `insert into items (name,description,price,sectionid) values ('${itemname}','${description}','${price}',${sectionid})`;
-//     sql = `update items set name='${itemname}',description='${description}',price='${price}',sectionid=${sectionid}, ownerid=${idcookie} where itemimage='${itemimage}'`
-//     console.log("SQL: " + sql);
-
-//     pool.getConnection(function (err, db) {
-//         if (err) {
-//             console.log("Error while getting connection")
-//         }
-//         db.query(sql, (err, result) => {
-//             if (err) {
-//                 console.log("Error occured : " + err);
-//             } else {
-//                 res.writeHead(200, {
-//                     "Content-Type": "text/plain"
-//                 });
-//                 res.end("Successfully added item");
-//             }
-//         });
-//         db.release()
-//     });
-// });
-
 
 router.post("/additem", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside additem Request");
@@ -558,82 +236,7 @@ router.post("/additem", passport.authenticate("jwt", { session: false }), functi
         }
 
     });
-
-    // var itemname = req.body.itemname;
-    // var description = req.body.description;
-    // var price = req.body.price;
-    // var sectionid = req.body.sectionid;
-    // var itemimage = req.body.itemimage;
-    // var idcookie = req.body.idcookie;
-    // var emailcookie = req.body.emailcookie;
-    // var cuisinecookie = req.body.cuisinecookie;
-    // var restaurantcookie = req.body.restaurantcookie;
-
-
-    // Item.findOneAndUpdate({ itemimage: itemimage }, { $set: { name: itemname, description: description, price: price, sectionname: sectionid, owneremail: emailcookie, cuisine: cuisinecookie, restaurantname: restaurantcookie } }, { new: true })
-    //     .then((doc) => {
-    //         console.log("update doc", doc);
-    //         res.writeHead(200, {
-    //             "Content-Type": "text/plain"
-    //         });
-    //         res.end("Successfully added item");
-    //     }).catch((e) => {
-    //         res.writeHead(400, {
-    //             "Content-Type": "text/plain"
-    //         });
-    //         res.end("Unsuccessfully added item");
-    //     })
 });
-
-// router.post('/additemuploadimage', function (req, res) {
-//     upload(req, res, err => {
-//         if (err) {
-//             res.writeHead(400, {
-//                 'Content-Type': 'text/plain'
-//             })
-//             res.end('Issue with uploading')
-//         } else {
-//             console.log('Inside upload post call')
-//             console.log(req.file)
-
-//             emailCookie = req.cookies.email;
-//             filename = req.file.filename;
-
-
-
-//             console.log("Filename : " + req.file.filename)
-//             console.log(req.file)
-
-
-
-//             //sql = `update buyer set profileimage='${filename}' where email='${emailCookie}'`;
-//             //sql="Select name,email from " + radio + " where password="' + password + '";
-//             sql = `insert into items (itemimage) values ('${filename}')`;
-//             console.log("SQL: " + sql);
-
-//             pool.getConnection(function (err, db) {
-//                 if (err) {
-//                     console.log("Error while getting connection")
-//                 }
-//                 db.query(sql, (err, result) => {
-//                     if (err) {
-//                         console.log("Error occured : " + err);
-//                     } else {
-//                         console.log("Image updated in database")
-//                     }
-//                 });
-//                 db.release()
-//             });
-
-
-
-//             res.writeHead(200, {
-//                 'Content-Type': 'text/plain'
-//             })
-//             res.end(JSON.stringify(req.file))
-//         }
-//     })
-// })
 
 router.post('/additemuploadimage', passport.authenticate("jwt", { session: false }), function (req, res) {
     upload(req, res, err => {
@@ -682,36 +285,6 @@ router.post('/additemuploadimage', passport.authenticate("jwt", { session: false
 })
 
 
-// router.post("/deletesectionitems", function (req, res) {
-//     console.log("Inside deletesectionitems Request");
-//     console.log("Req Body : ", req.body);
-
-//     var itemid = req.body.itemid;
-
-
-//     sql = `delete from items where itemid=${itemid}`;
-//     //sql="Select name,email from " + radio + " where password="' + password + '";
-//     console.log("SQL: " + sql);
-
-//     pool.getConnection(function (err, db) {
-//         if (err) {
-//             console.log("Error while getting connection")
-//         }
-//         db.query(sql, (err, result) => {
-//             if (err) {
-//                 console.log("Error occured : " + err);
-//             } else {
-//                 res.writeHead(200, {
-//                     "Content-Type": "text/plain"
-//                 });
-//                 res.end("Successfully deleted the item");
-//             }
-//         });
-//         db.release()
-//     });
-// });
-
-
 router.post("/deletesectionitems", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside deletesectionitems Request");
     console.log("Req Body : ", req.body);
@@ -742,55 +315,7 @@ router.post("/deletesectionitems", passport.authenticate("jwt", { session: false
         }
 
     });
-
-
-    // var itemid = req.body.itemid;
-
-    // Item.remove({ _id: itemid }, { single: true })
-    //     .then((doc) => {
-    //         console.log("item delete success", doc);
-    //         res.writeHead(200, {
-    //             "Content-Type": "text/plain"
-    //         });
-    //         res.end("Successfully deleted item");
-    //     }).catch((e) => {
-    //         res.writeHead(400, {
-    //             "Content-Type": "text/plain"
-    //         });
-    //         res.end("Unsuccessfully deleted item");
-    //     })
 });
-
-// router.post("/addsection", function (req, res) {
-//     console.log("Inside Add Section Request");
-//     console.log("Req Body : ", req.body);
-//     var sectionname = req.body.sectionname;
-//     var idcookie = req.body.idcookie;
-//     var emailcookie = req.body.emailcookie
-//     console.log(sectionname)
-
-//     sql = `insert into sections (sectionname,ownerid) values ('${sectionname}',${idcookie})`
-//     console.log(sql)
-
-//     pool.getConnection(function (err, db) {
-//         if (err) {
-//             console.log("Error while getting connection")
-//         }
-//         db.query(sql, (err, result) => {
-//             if (err) {
-//                 console.log("Error occured : " + err);
-//             } else {
-//                 console.log("Data inserted into orders table successfully!")
-//                 res.writeHead(200, {
-//                     "Content-Type": "text/plain"
-//                 });
-//                 //console.log(JSON.stringify(resultObject))
-//                 res.end("Section added successfully");
-//             }
-//         })
-//         db.release()
-//     });
-// });
 
 router.post("/addsection", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside Add Section Request");
@@ -822,31 +347,6 @@ router.post("/addsection", passport.authenticate("jwt", { session: false }), fun
         }
 
     });
-
-
-    // var sectionname = req.body.sectionname;
-    // var idcookie = req.body.idcookie;
-    // var emailcookie = req.body.emailcookie
-    // console.log(sectionname)
-
-    // const section = new Section({
-    //     sectionname: sectionname,
-    //     ownername: emailcookie
-    // })
-    // console.log("object creatd " + section)
-    // section.save().then(result => {
-    //     console.log("Section added successfully " + result);
-    //     res.writeHead(200, {
-    //         "Content-Type": "text/plain"
-    //     });
-    //     res.end("Successful Add section");
-    // }).catch(error => {
-    //     console.log("error occured" + error);
-    //     res.writeHead(400, {
-    //         "Content-Type": "text/plain"
-    //     });
-    //     res.end("Unsuccessful add section");
-    // });
 });
 
 router.post("/deletesection", passport.authenticate("jwt", { session: false }), function (req, res) {
@@ -879,56 +379,7 @@ router.post("/deletesection", passport.authenticate("jwt", { session: false }), 
         }
 
     });
-
-
-    // var sectionid = req.body.sectionid;
-    // var emailcookie = req.body.emailcookie;
-
-    // Section.deleteMany({ ownername: emailcookie, sectionname: sectionid }).then((doc) => {
-    //     console.log("Data deleted in section")
-    //     Item.deleteMany({ ownername: emailcookie, sectionname: sectionid }).then((doc) => {
-    //         console.log("Data deleted in Items")
-    //         res.writeHead(200, {
-    //             'Content-Type': 'text/plain'
-    //         })
-    //         res.end("Section deleted successfully")
-    //     })
-    // }).catch((err) => {
-    //     console.log("Data not deleted in section" + err)
-    //     res.writeHead(200, {
-    //         'Content-Type': 'text/plain'
-    //     })
-    //     res.end("Section deleted unsuccessfully")
-    // })
 });
-
-
-// router.get("/owneroldorders", function (req, res) {
-//     console.log("Inside owneroldorders");
-
-//     sql = `select orderid, personname, status from orders
-//     where ownerid=${req.query.idcookie} and status in ("Delivered","Cancel")`;
-//     console.log("SQL: " + sql);
-
-//     pool.getConnection(function (err, db) {
-//         if (err) {
-//             console.log("Error while getting connection")
-//         }
-//         db.query(sql, (err, result) => {
-//             if (err) {
-//                 console.log("Error occured : " + err);
-//             } else {
-//                 console.log("Inside 200 response")
-//                 res.writeHead(200, {
-//                     "Content-Type": "text/plain"
-//                 });
-//                 //console.log(JSON.stringify(resultObject))
-//                 res.end(JSON.stringify(result));
-//             }
-//         });
-//         db.release()
-//     });
-// });
 
 router.get("/owneroldorders", passport.authenticate("jwt", { session: false }), function (req, res) {
     console.log("Inside owneroldorders");
@@ -959,22 +410,6 @@ router.get("/owneroldorders", passport.authenticate("jwt", { session: false }), 
         }
 
     });
-
-
-    // Order.find({ owneremail: req.query.emailcookie, status: { $in: ["Delivered", "Cancel"] } }).then((doc) => {
-    //     console.log("owneroldorders success!" + doc)
-    //     res.writeHead(200, {
-    //         "Content-Type": "text/plain"
-    //     });
-    //     res.end(JSON.stringify(doc));
-    // }).catch((err) => {
-    //     console.log("owneroldorders fail! " + err)
-    //     res.writeHead(400, {
-    //         "Content-Type": "text/plain"
-    //     });
-    //     //console.log(JSON.stringify(resultObject))
-    //     res.end("owneroldorders fail");
-    // })
 });
 
 //----------new functionality
@@ -1009,35 +444,6 @@ router.post("/ownermessage", passport.authenticate("jwt", { session: false }), f
         }
 
     });
-
-    // var message = req.body.message;
-    // var owneremail = req.body.owneremail;
-    // var buyeremail = req.body.buyeremail;
-    // var restaurant = req.body.restaurant;
-    // var orderid = req.body.orderid;
-
-    // const ownermessage = new Ownermessage({
-    //     _id: new mongoose.Types.ObjectId(),
-    //     message: message,
-    //     sender: owneremail,
-    //     receiver: buyeremail,
-    //     restaurant: restaurant,
-    //     orderid: orderid,
-    // })
-    // console.log("object creatd " + ownermessage)
-    // ownermessage.save().then(result => {
-    //     console.log("Message saved successfully " + result);
-    //     res.writeHead(200, {
-    //         "Content-Type": "text/plain"
-    //     });
-    //     res.end("Message saved successfully");
-    // }).catch(error => {
-    //     console.log("error occured" + error);
-    //     res.writeHead(400, {
-    //         "Content-Type": "text/plain"
-    //     });
-    //     res.end("Message saved unsuccessfully");
-    // });
 });
 
 router.get("/ownerviewmessage", passport.authenticate("jwt", { session: false }), function (req, res) {
@@ -1069,23 +475,6 @@ router.get("/ownerviewmessage", passport.authenticate("jwt", { session: false })
         }
 
     });
-
-
-    // emailcookie = req.query.emailcookie;
-    // Ownermessage.find({ receiver: emailcookie }).then((doc) => {
-    //     console.log("buyerviewmessage success" + doc)
-    //     res.writeHead(200, {
-    //         "Content-Type": "text/plain"
-    //     });
-    //     res.end(JSON.stringify(doc));
-    // }).catch((err) => {
-    //     console.log(err);
-    //     console.log("Inside 400 response")
-    //     res.writeHead(400, {
-    //         "Content-Type": "text/plain"
-    //     });
-    //     res.end("Error in buyerviewmessage");
-    // });
 });
 
 
