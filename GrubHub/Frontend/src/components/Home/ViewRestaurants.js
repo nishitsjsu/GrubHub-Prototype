@@ -26,7 +26,7 @@ class ViewRestaurants extends Component {
             // itemimage: "",
             authFlag: false,
             currenPage: 1,
-            sectionsPerPage: 1,
+            sectionsPerPage: 4,
         };
         //Bind the handlers to this class
         this.itemnameChangeHandler = this.itemnameChangeHandler.bind(this);
