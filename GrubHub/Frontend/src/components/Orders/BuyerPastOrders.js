@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import { Redirect } from 'react-router';
 import OrderData from "../Extra/OrderData"
 import setAuthorizationToken from '../../utils/setAuthorizationToken'
+import { connect } from "react-redux";
+import buyeroldordersFetch_function from "../Action/BuyerOldOrdersAction"
 import rootURL from '../config';
 
 class BuyerPastOrders extends Component {
@@ -15,26 +17,47 @@ class BuyerPastOrders extends Component {
             orders: [],
             idcookie: cookie.load("id"),
             emailcookie: cookie.load("email"),
+            authFlag: false
         }
 
     }
+
+    componentWillReceiveProps(nextProps) {
+
+        console.log("in will recieve props for details", nextProps);
+        this.setState({
+            authFlag: nextProps.authFlag,
+            orders: nextProps.orders,
+        })
+    }
+
+    //Call the Will Mount to set the auth Flag to false
+    componentWillMount() {
+        this.setState({
+            authFlag: false
+        });
+    }
+
     //get the orders data from backend  
     componentDidMount() {
-        setAuthorizationToken(localStorage.getItem('jwt'));
-        axios.get(rootURL + '/buyerpastorders', {
-            params: {
-                idcookie: this.state.idcookie,
-                emailcookie: this.state.emailcookie,
-            }
-        })
-            .then((response) => {
-                console.log("Received response")
-                //update the state with the response data
-                this.setState({
+        var emailcookie = this.state.emailcookie;
+        // setAuthorizationToken(localStorage.getItem('jwt'));
+        // axios.get(rootURL + '/buyerpastorders', {
+        //     params: {
+        //         idcookie: this.state.idcookie,
+        //         emailcookie: this.state.emailcookie,
+        //     }
+        // })
+        //     .then((response) => {
+        //         console.log("Received response")
+        //         //update the state with the response data
+        //         this.setState({
 
-                    orders: this.state.orders.concat(response.data)
-                });
-            });
+        //             orders: this.state.orders.concat(response.data)
+        //         });
+        //     });
+
+        this.props.buyeroldordersFetch_function(emailcookie);
     }
 
 
@@ -85,4 +108,25 @@ class BuyerPastOrders extends Component {
     }
 }
 //export Home Component
-export default BuyerPastOrders;
+// export default BuyerPastOrders;
+
+function mapStateToProps(state) {
+    console.log("in map state traveler_propfile", state);
+    return {
+
+        orders: state.BuyerOldOrdersReducer.orders,
+        authFlag: state.BuyerOldOrdersReducer.authFlag,
+
+    };
+}
+
+const mapDispachToProps = dispatch => {
+    return {
+        buyeroldordersFetch_function: (emailcookie) => dispatch(buyeroldordersFetch_function(emailcookie)),
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispachToProps
+)(BuyerPastOrders);

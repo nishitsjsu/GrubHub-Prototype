@@ -24,6 +24,7 @@ import BuyerMenuReducer from "./BuyerMenuReducer";
 import AddToCartReducer from "./AddToCartReducer";
 import ViewCartReducer from "./ViewCartReducer";
 import BuyerFutureOrdersReducer from "./BuyerFutureOrdersReducer";
+import BuyerOldOrdersReducer from "./BuyerOldOrdersReducer";
 
 
 const rootReducer = combineReducers({
@@ -52,6 +53,7 @@ const rootReducer = combineReducers({
     AddToCartReducer: AddToCartReducer,
     ViewCartReducer: ViewCartReducer,
     BuyerFutureOrdersReducer: BuyerFutureOrdersReducer,
+    BuyerOldOrdersReducer: BuyerOldOrdersReducer,
 })
 
 export default rootReducer
