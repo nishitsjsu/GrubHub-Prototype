@@ -30,6 +30,7 @@ it("should update data in buyer profile", function (done) {
 it("should update data in owner profile", function (done) {
     chai.request('http://127.0.0.1:3001')
         .post('/ownerprofile')
+        .set("Authorization", "Bearer " + token)
         .send({ "username": "kafka", "email": "kafka", "phone": "1234", "restaurant": "kakfa", "cuisine": "bb", "idcookie": "5" })
         .end(function (err, res) {
             expect(res).to.have.status(200);
@@ -40,6 +41,7 @@ it("should update data in owner profile", function (done) {
 it("should change the order status", function (done) {
     chai.request('http://127.0.0.1:3001')
         .post('/changestatus')
+        .set("Authorization", "Bearer " + token)
         .send({ "status": "Delivered", "orderid": "135dbfe035eeced05202af76bc" })
         .end(function (err, res) {
             expect(res).to.have.status(200);
@@ -51,6 +53,7 @@ it("should change the order status", function (done) {
 it("should delete the item form the items table", function (done) {
     chai.request('http://127.0.0.1:3001')
         .post('/deletesectionitems')
+        .set("Authorization", "Bearer " + token)
         .send({ "itemid": "5dbf7ba5c329960bb2208823" })
         .end(function (err, res) {
             expect(res).to.have.status(200);
