@@ -1,1 +1,1 @@
-# CMPE273-Lab2
+# A prototype of Grubhub using MERN stack.
